@@ -9,17 +9,24 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vue-office/docx": "^1.6.2",
+    "@vue-office/excel": "^1.7.11",
+    "@vue-office/pdf": "^2.0.2",
     "axios": "^1.7.7",
     "element-plus": "^2.8.2",
     "jsencrypt": "^3.3.2",
     "pinia": "^2.2.2",
     "vue": "^3.4.37",
-    "vue-router": "^4.4.3"
+    "vue-demi": "^0.14.10",
+    "vue-pdf-embed": "^1.2.1",
+    "vue-router": "^4.4.3",
+    "vue3-pdf-app": "^1.0.3"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.247",
     "@vitejs/plugin-vue": "^5.1.2",
     "autoprefixer": "^10.4.20",
+    "less": "^4.2.0",
     "postcss": "^8.4.45",
     "tailwindcss": "^3.4.10",
     "unplugin-auto-import": "^0.18.2",

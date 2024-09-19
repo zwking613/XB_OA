@@ -1,4 +1,4 @@
-import { post } from "@/utils/request";
+import { post ,get} from "@/utils/request";
 
 
 /**
@@ -71,4 +71,18 @@ export const shareFile = (params) => post("/file/share", params);
  * @returns {Promise}
  */
 export const reDropFile = (params) => post("/file/reDrop", {fileIds:params});
+
+/**
+ * 获取文件预览
+ * @param {string} fileId 文件ID
+ * @returns {Promise}
+ */
+export const getPreviewFile = (fileId) => get("/file/preview", {fileId});
+
+/**
+ * 创建文件夹
+ * @param {Object} params
+ * @returns {Promise}
+ */
+export const createFolder = (params) => post("/file/makeFolder", params);
 

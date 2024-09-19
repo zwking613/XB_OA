@@ -45,7 +45,7 @@ request.interceptors.response.use(
     },
     error => {
         if (!error.response) {
-            console.log(error)
+            console.log(error);
             ElMessage.error('未知错误，请联系管理员');
             throw new Error('未知错误，请联系管理员');
         }
@@ -58,8 +58,10 @@ request.interceptors.response.use(
             case 401:
                 // 未授权，可能是未登录或token过期
                 console.error('Unauthorized:', error.response.data);
-                router.push('/login');  // 重定向到登录页面
-                localStorage.removeItem('token')
+                if (router.currentRoute.value.path !== '/login') {
+                    router.push('/login');  // 重定向到登录页面
+                }
+                localStorage.removeItem('token');
                 ElMessage.error('未授权，请重新登录');
                 throw new Error('未授权，请重新登录');
             case 403:
@@ -77,7 +79,6 @@ request.interceptors.response.use(
                 console.error('Internal Server Error:', error.response.data);
                 ElMessage.error('服务器错误，请稍后再试');
                 throw new Error('服务器错误，请稍后再试');
-
             default:
                 // 其他状态码
                 console.error('Unexpected status:', error.response.status, error.response.data);
@@ -92,7 +93,8 @@ export function get(url, params = {}) {
     return request({
         method: 'get',
         url,
-        params
+        params,
+        responseType: 'blob'
     })
 }
 

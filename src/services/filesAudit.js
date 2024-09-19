@@ -12,7 +12,7 @@ export const auditFileShare = (params) => post("/fileAudit/audit", params);
  * @param {string} id - 审核记录ID
  * @returns {Promise}
  */
-export const cancelAudit = (id) => post('/fileAudit/delete',{id});
+export const deleteAudit = (id) => post('/fileAudit/delete',{id});
 
 /**
  * 获取审核列表

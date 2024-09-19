@@ -1,9 +1,11 @@
 import { defineStore } from "pinia";
 import * as filesServices from "@/services/files";
-
+import { getUserList } from "@/services/user";
 export const useFileStore = defineStore("file", {
   state: () => ({
     fileList: [],
+    fileFolder: [],
+    userList: [],
   }),
 
   getters: {},
@@ -13,6 +15,7 @@ export const useFileStore = defineStore("file", {
     async fetchFileList(params = {}) {
       try {
         const result = await filesServices.getFileList(params);
+        const folder = await filesServices.getFileList({type:"所有文件夹"});
         if (result.code === 200) {
           this.fileList =
             result.list.file &&
@@ -23,11 +26,25 @@ export const useFileStore = defineStore("file", {
         } else {
           ElMessage.error(result.message || "获取文件列表失败");
         }
+        if(folder.code === 200){
+          this.fileFolder = folder.list.file
+        }
       } catch (error) {
         console.error(result.list, error);
       }
     },
-
+    // 获取用户列表
+    async fetchUserList(callback) {
+      try {
+        const result = await getUserList({ pageNo: 1, pageSize: 1000 });
+        if (result.code === 200) {
+          this.userList = result.list.list;
+          callback && callback();
+        }
+      } catch (error) {
+        console.error("获取用户列表失败", error);
+      }
+    },
     // 删除文件
     async removeFile(params, callback, type) {
       try {
@@ -62,12 +79,12 @@ export const useFileStore = defineStore("file", {
     },
 
     // 移动文件
-    async moveFileToLocation(params) {
+    async moveFileToLocation(params,type) {
       try {
         const result = await filesServices.moveFile(params);
         if (result.code === 200) {
           ElMessage.success("移动文件成功");
-          await this.fetchFileList();
+          await this.fetchFileList({type});
         } else {
           ElMessage.error(result.message || "移动文件失败");
         }
@@ -149,14 +166,30 @@ export const useFileStore = defineStore("file", {
       }
     },
 
+    // 创建文件夹
+    async createFolderAction(params,type) {
+      try {
+        const result = await filesServices.createFolder(params);
+        if (result.code === 200) {
+          ElMessage.success("创建文件夹成功");
+          this.fetchFileList({type});
+        } else {
+          ElMessage.error(result.message || "创建文件夹失败");
+        }
+      } catch (error) {
+        console.error("创建文件夹失败", error);
+        ElMessage.error("创建文件夹失败");
+      }
+    },
 
     // 分享文件
-    async shareFileAction(params) {
+    async shareFileAction(params,callback) {
       try {
         const result = await filesServices.shareFile(params);
         if (result.code === 200) {
           ElMessage.success("分享文件成功");
-          return result.list; // 返回分享链接或其他相关信息
+          callback&&callback()
+          // return result.list; // 返回分享链接或其他相关信息
         } else {
           ElMessage.error(result.message || "分享文件失败");
         }

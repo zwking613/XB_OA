@@ -59,6 +59,23 @@ export const routes = [
             icon: 'Folder'
         }
     },
+    {
+        name: '系统配置',
+        path: '/sysConfig',
+        children: [
+            {
+                name: '系统配置',
+                path: '/sys',
+                component: () => import('@/pages/sysConfig/sys.vue'),
+                meta: {
+                    icon: 'Setting'
+                }
+            }
+        ],
+        meta: {
+            icon: 'Setting'
+        }
+    }
 ]
 const router = createRouter({
     history: createWebHistory(),//工作模式 ，还有一种是hash
@@ -79,33 +96,6 @@ const router = createRouter({
         path: '/home', //pages下的vue文件的路径
         component: () => import('@/pages/home/index.vue'), //pages下的vue文件
         children: routes
-        // children: [
-        //     {
-        //         name: '文件管理',
-        //         path: '/files',
-        //         component: () => import('@/pages/files/index.vue')
-        //     },
-        //     {
-        //         name: '用户管理',
-        //         path: '/user',
-        //         component: () => import('@/pages/user/index.vue')
-        //     },
-        //     {
-        //         name: '部门管理',
-        //         path: '/department',
-        //         component: () => import('@/pages/department/index.vue')
-        //     },
-        // {
-        //     name: 'news',
-        //     path: '/news', //pages下的vue文件的路径
-        //     component: () => import('@/pages/news.vue') //pages下的vue文件
-        // },
-        // {
-        //     name: 'about',
-        //     path: '/about',
-        //     component: () => import('@/pages/about.vue')
-        // }
-        // ]
     }],
 })
 

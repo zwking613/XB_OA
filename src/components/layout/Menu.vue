@@ -1,5 +1,5 @@
 <template>
-  <el-menu :default-active="defaultActive" class="h-[calc(100vh-64px)] el-menu-vertical-demo dark-mode" :router="true"
+  <el-menu :unique-opened="true" :default-active="defaultActive" class="h-[calc(100vh-64px)] el-menu-vertical-demo dark-mode" :router="true"
     background-color="rgb(35 46 51)" text-color="#fff" :collapse="isCollapse" active-text-color="#fff">
     <template v-for="route in routes">
       <el-sub-menu :key="route.name" v-if="route.children && route.children.length" :index="route.path">

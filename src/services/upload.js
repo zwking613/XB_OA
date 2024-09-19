@@ -2,3 +2,5 @@
 export const upload = '/api/file/save'
 
 export const download = '/api/file/download'
+
+export const preview = '/api/file/preview'
