@@ -4,7 +4,7 @@
       <el-button type="primary" @click="addDialogVisible = true">添加</el-button>
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
         <el-form-item label="用户名">
-          <el-input clearable v-model="searchForm.userName" placeholder="请输入用户名" />
+          <el-input clearable v-model="searchForm.name" placeholder="请输入用户名" />
         </el-form-item>
         <el-form-item label="电话">
           <el-input clearable v-model="searchForm.phone" placeholder="请输入电话" />
@@ -15,7 +15,7 @@
       </el-form>
     </div>
 
-    <el-dialog v-model="addDialogVisible" title="添加用户" width="30%" destroy-on-close>
+    <el-dialog v-model="addDialogVisible" title="添加/修改" width="30%" destroy-on-close>
       <el-form :model="userForm" :rules="rules" ref="userFormRef" label-width="100px">
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="userForm.userName" placeholder="请输入用户名"></el-input>
@@ -31,60 +31,16 @@
         </span>
       </template>
     </el-dialog>
-    <el-table :loading="userStore.loading" :data="userStore.userList.list" style="width: 100%" border>
-      <el-table-column prop="id" label="序号" align="center" />
-      <el-table-column prop="userName" label="用户名" align="center" />
-      <el-table-column prop="phone" label="电话" align="center" />
-      <el-table-column prop="admin" label="权限" align="center">
-        <template #default="scope">
-          <el-tag :type="scope.row.admin ? 'success' : 'info'">
-            {{scope.row.admin ? "管理员" : "用户"}}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="deptName" label="所属部门" align="center">
-        <template #default="scope">
-          <el-tag class="mr-1" v-if="scope.row.deptName" v-for="deptName in scope.row.deptName.split(',')"
-            :key="deptName">
-            {{ deptName }}
-          </el-tag>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="操作" align="center" width="250">
-        <template #default="scope">
-          <!-- 编辑 -->
-          <el-button size="small" @click="handleEdit(scope.row)">编辑</el-button>
-
-          <!-- 重置密码 -->
-          <el-popconfirm title="确定重置密码吗?" @confirm="handleResetPassword(scope.row)" confirm-button-text=" 确定"
-            cancel-button-text="取消">
-            <template #reference>
-              <el-button size="small" type="warning">重置</el-button>
-            </template>
-          </el-popconfirm>
-
-          <!-- 删除 -->
-          <el-popconfirm title="确定删除吗?" @confirm="handleDelete(scope.row)" confirm-button-text=" 确定"
-            cancel-button-text="取消">
-            <template #reference>
-              <el-button size="small" type="danger">删除</el-button>
-            </template>
-          </el-popconfirm>
-        </template>
-
-      </el-table-column>
-    </el-table>
-    <div class="flex justify-end w-full mt-4 ">
-      <el-pagination layout="prev, pager, next" background :total="userStore.userList.totalCount"
-        @current-change="handleCurrentChange" />
-    </div>
+    <Grid :loading="userStore.loading" :fetchData="fetchData" :columns="columns" :list="userStore.userList" :edit="handleEdit"
+      :delete="handleDelete" :actions="actions" />
   </div>
 </template>
 
-<script setup name="User">
+<script setup name="User" lang="jsx">
 import { useUserStore } from "@/stores/user";
 import { onMounted, ref } from "vue";
+import Grid from '@/components/grid/Grid.vue';
+
 const userStore = useUserStore();
 const addDialogVisible = ref(false);
 
@@ -96,7 +52,7 @@ const userForm = ref({
 
 const userFormRef = ref(null);
 const searchForm = ref({
-  userName: '',
+  name: '',
   phone: '',
 });
 const rules = ref({
@@ -144,13 +100,52 @@ const handleAddUser = () => {
 const handleResetPassword = (row) => {
   userStore.resetPassword(row.id);
 }
-const handleCurrentChange = (pageNo) => {
-  userStore.getUserList({ pageNo });
-}
+
 const handleSearch = () => {
   const { pageNo, pageSize } = userStore.userList;
   userStore.getUserList({ pageNo, pageSize, filter:searchForm.value });
 }
+const columns = [
+  { prop: 'id', label: '序号', align: 'center' },
+  { prop: 'userName', label: '用户名', align: 'center' },
+  { prop: 'phone', label: '电话', align: 'center' },
+  {
+    prop: 'admin',
+    label: '权限',
+    align: 'center',
+    customRender: ({ row }) => (
+      <el-tag type={row.admin ? 'success' : 'info'}>
+        {row.admin ? '管理员' : '用户'}
+      </el-tag>
+    )
+  },
+  {
+    prop: 'deptName',
+    label: '所属部门',
+    align: 'center',
+    customRender: ({ row }) => (
+      <>
+        {row.deptName && row.deptName.split(',').map(deptName => (
+          <el-tag class="mr-1" key={deptName}>
+            {deptName}
+          </el-tag>
+        ))}
+      </>
+    )
+  },
+];
+
+const fetchData = async ({ pageNo, pageSize }) => {
+    userStore.getUserList({ pageNo, pageSize, ...searchForm.value });
+};
+const actions = [
+  {
+    label: '重置',
+    icon: 'Refresh',
+    type: 'warning',
+    onClick: handleResetPassword
+  },
+]
 onMounted(() => {
   userStore.getUserList();
 });

@@ -20,16 +20,19 @@
     "vue-demi": "^0.14.10",
     "vue-pdf-embed": "^1.2.1",
     "vue-router": "^4.4.3",
-    "vue3-pdf-app": "^1.0.3"
+    "vue3-pdf-app": "^1.0.3",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.247",
     "@vitejs/plugin-vue": "^5.1.2",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
+    "@vue/babel-plugin-jsx": "^1.2.5",
     "autoprefixer": "^10.4.20",
     "less": "^4.2.0",
     "postcss": "^8.4.45",
     "tailwindcss": "^3.4.10",
-    "unplugin-auto-import": "^0.18.2",
+    "unplugin-auto-import": "^0.18.3",
     "unplugin-icons": "^0.19.3",
     "unplugin-vue-components": "^0.27.4",
     "vite": "^5.4.1"

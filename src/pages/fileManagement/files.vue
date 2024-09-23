@@ -88,7 +88,7 @@
   viewMode === 'grid' ? 'mt-2 w-full truncate text-[14px]' : 'ml-2 w-[200px] truncate text-[14px] flex items-center','text-center'
               ]">{{ file.fileName }}</div>
               <!-- 列表视图下显示上传时间 -->
-              <div v-if="viewMode === 'list'" class="ml-5  w-full truncate text-[14px]">
+              <div v-if="viewMode === 'list'" class="flex items-center ml-5 w-full truncate text-[14px]">
                 {{ file.uploadTime }}
               </div>
             </li>

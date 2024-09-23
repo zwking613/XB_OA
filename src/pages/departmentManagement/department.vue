@@ -5,7 +5,6 @@
         添加部门
       </el-button>
     </div>
-
     <!-- 添加部门 -->
     <el-dialog v-model="dialogVisible" title="添加部门" width="30%" :before-close="handleClose">
       <el-form :model="form" label-width="120px" :rules="rules" ref="formRef">
@@ -47,7 +46,7 @@
             <el-button v-if="data.type === 'department'" type="primary" size="small" @click.stop="handleAddUser(data)">
               添加用户
             </el-button>
-            <el-popconfirm title="确定删除吗?" v-if="data.type === 'department'" @confirm="deleteDepartment(node, data)"
+            <el-popconfirm title="确定删除吗?" @confirm="deleteDepartment(node, data, data.type)"
               confirm-button-text="确定" cancel-button-text="取消">
               <template #reference>
                 <el-button type="danger" size="small">
@@ -62,13 +61,15 @@
     </el-tree>
 
     <!-- 添加用户 -->
-    <el-dialog v-model="userDialogVisible" title="添加用户" width="400px" destroy-on-close :before-close="userHandleClose">
+    <el-dialog v-model="userDialogVisible" title="添加用户" width="500px" destroy-on-close :before-close="userHandleClose">
       <el-form :model="formUser" :rules="userRules" ref="formUserRef">
         <el-form-item label="用户" prop="users">
-          <el-select v-model="formUser.users" placeholder="请选择用户" multiple>
+          <!-- <el-select v-model="formUser.users" placeholder="请选择用户" multiple>
             <el-option v-for="user in departmentStore.userList" :key="user.id" :label="user.userName"
               :value="user.id" />
-          </el-select>
+          </el-select> -->
+          <SelectLimit v-model="formUser.users" url="/user/page" :dataKey="['list', 'list']" labelKey="userName"
+            valueKey="id" searchKey="userName" :change="onChange" placeholder="请选择用户" :multiple="true"/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -85,7 +86,7 @@
 
 <script setup name="User">
 import { useDepartmentStore } from "@/stores/department";
-
+import SelectLimit from '@/components/from/SelectLimit.vue';
 import { onMounted, ref } from "vue";
 const departmentStore = useDepartmentStore();
 const dialogVisible = ref(false);
@@ -125,8 +126,15 @@ const handleClose = () => {
 
 
 // 删除部门
-const deleteDepartment = (node, {id}) => {
-  departmentStore.removeDepartment(id);
+const deleteDepartment = (node, { id, fatherId },type) => {
+  if(type === 'department'){
+    departmentStore.removeDepartment(id);
+  }else{
+    departmentStore.deleteUserFromDept({
+      deptId: fatherId,
+      userId: id,
+    });
+  }
 };
 
 const openInsertDialog = () => {

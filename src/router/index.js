@@ -60,13 +60,21 @@ export const routes = [
         }
     },
     {
-        name: '系统配置',
+        name: '流程配置',
         path: '/sysConfig',
         children: [
             {
-                name: '系统配置',
+                name: '流程配置',
                 path: '/sys',
                 component: () => import('@/pages/sysConfig/sys.vue'),
+                meta: {
+                    icon: 'Setting'
+                }
+            },
+            {
+                name: '流程模型',
+                path: '/model',
+                component: () => import('@/pages/sysConfig/model.vue'),
                 meta: {
                     icon: 'Setting'
                 }

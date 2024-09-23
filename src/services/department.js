@@ -54,6 +54,16 @@ export const updateDepartment = (params) => post("/department/update", params);
  */
 export const getDepartment = (params) => post("/department/find", params);
 
+/**
+ * 将用户从部门删除
+ * @param {Object} params 
+ * @param {number} params.deptId 部门Id
+ * @param {number} params.userId 用户Id
+ * @returns {Promise}
+ */
+export const deleteUserFromDept = (params) => post("/department/deleteUserFormDept", params);
+
+
 
 
 

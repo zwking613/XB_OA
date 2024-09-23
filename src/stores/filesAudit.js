@@ -16,8 +16,10 @@ export const useFileAuditStore = defineStore("fileAudit", {
   actions: {
     // 获取审核列表
     async fetchAuditList(params = { pageNo: 1, pageSize: 10 ,searchType :1}) {
+      console.log(params)
       try {
         const result = await filesAuditServices.getAuditList(params);
+        console.log(result)
         if (result.code === 200) {
           this.auditList = result.list || [];
         } else {

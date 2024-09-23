@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getDepartmentList, deleteDepartment, saveDepartment, setDepartment, updateDepartment, getDepartment } from "@/services/department";
+import { getDepartmentList, deleteDepartment, saveDepartment, setDepartment, deleteUserFromDept, getDepartment } from "@/services/department";
 import { getUserList } from "@/services/user";
 
 const splitDepartmentList = (departmentList, id = 0) => {
@@ -12,6 +12,7 @@ const splitDepartmentList = (departmentList, id = 0) => {
       children: item.users && item.users.map(user => {
         return {
           label: user.userName,
+          fatherId: item.id,
           type: 'user',
           isManager: user.id === item.managerId,
           ...user,
@@ -101,6 +102,20 @@ export const useDepartmentStore = defineStore("department", {
         }
       } catch (error) {
         console.error("设置部门用户失败", error);
+      }
+    },
+
+    // 将用户从部门删除
+    async deleteUserFromDept(params, callback) {
+      try {
+        const result = await deleteUserFromDept(params);
+        if (result.code === 200) {
+          ElMessage.success("删除用户成功");
+          callback && callback();
+          this.fetchDepartmentList();
+        }
+      } catch (error) {
+        console.error("删除用户失败", error);
       }
     },
   },
