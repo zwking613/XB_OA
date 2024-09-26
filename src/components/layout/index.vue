@@ -5,9 +5,9 @@
       <el-aside class="w-[16.25rem]">
         <Menu />
       </el-aside>
-      <el-container>
-        <el-main class="h-full overflow-y-auto el-main">
-          <el-card>
+      <el-container >
+        <el-main class="h-full">
+          <el-card class="h-[calc(100vh-110px)] el-main">
             <RouterView></RouterView>
           </el-card>
         </el-main>
@@ -23,6 +23,9 @@ import Header from "@/components/layout/Header.vue";
 <style scoped>
 .el-main::-webkit-scrollbar {
   width: 8px;
+}
+.el-main {
+  overflow-y: auto;
 }
 
 .el-main::-webkit-scrollbar-track {

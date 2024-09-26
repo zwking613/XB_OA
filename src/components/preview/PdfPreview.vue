@@ -157,9 +157,9 @@ function pagesRendered(pdfApp) {
     --pdf-dialog-button-font-color: #d9d9d9;
     --pdf-dialog-button-color: #606c88;
 
-    :deep(.thumbnail.selected>.thumbnailSelectionRing) {
-        background-color: rgb(147, 179, 242);
-    }
+    // :deep(.thumbnail.selected>.thumbnailSelectionRing) {
+    //     background-color: rgb(147, 179, 242);
+    // }
 }
 
 .pdf-app.light {
@@ -193,8 +193,8 @@ function pagesRendered(pdfApp) {
     --pdf-dialog-button-font-color: #d9d9d9;
     --pdf-dialog-button-color: #3f4b5b;
 
-    :deep(.thumbnail.selected>.thumbnailSelectionRing) {
-        background-color: rgb(105, 105, 105);
-    }
+    // :deep(.thumbnail.selected>.thumbnailSelectionRing) {
+    //     background-color: rgb(105, 105, 105);
+    // }
 }
 </style>

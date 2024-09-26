@@ -14,7 +14,7 @@ const src = ref(process.env.NODE_ENV === 'development' ? 'http://192.168.3.129:8
 <style scoped>
 .iframe-container {
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 200px);
   overflow: hidden;
 }
 </style>

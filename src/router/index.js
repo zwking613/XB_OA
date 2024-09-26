@@ -1,12 +1,14 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
+
 export const routes = [
     {
         name: '文件管理',
-        path: '/fileManagement',
+        path: '/fileManagement/',
+        component: () => import('@/pages/fileManagement/index.vue'),
         children: [
             {
                 name: '文件管理',
-                path: '/files',
+                path: 'files',
                 component: () => import('@/pages/fileManagement/files.vue'),
                 meta: {
                     icon: 'Document'
@@ -14,7 +16,7 @@ export const routes = [
             },
             {
                 name: '文件审核',
-                path: '/filesAudit',
+                path: 'filesAudit',
                 component: () => import('@/pages/fileManagement/filesAudit.vue'),
                 meta: {
                     icon: 'Document'
@@ -27,11 +29,12 @@ export const routes = [
     },
     {
         name: '用户管理',
-        path: '/userManagement',
+        path: '/userManagement/',
+        component: () => import('@/pages/userManagement/index.vue'),    
         children: [
             {
                 name: '用户管理',
-                path: '/user',
+                path: 'user',
                 component: () => import('@/pages/userManagement/user.vue'),
                 meta: {
                     icon: 'User'
@@ -44,11 +47,12 @@ export const routes = [
     },
     {
         name: '部门管理',
-        path: '/departmentManagement',
+        path: '/departmentManagement/',
+        component: () => import('@/pages/departmentManagement/index.vue'),
         children: [
             {
                 name: '部门管理',
-                path: '/department',
+                path: 'department',
                 component: () => import('@/pages/departmentManagement/department.vue'),
                 meta: {
                     icon: 'Folder'
@@ -61,11 +65,12 @@ export const routes = [
     },
     {
         name: '流程配置',
-        path: '/sysConfig',
+        path: '/sysConfig/',
+        component: () => import('@/pages/sysConfig/index.vue'),
         children: [
             {
                 name: '流程配置',
-                path: '/sys',
+                path: 'sys',
                 component: () => import('@/pages/sysConfig/sys.vue'),
                 meta: {
                     icon: 'Setting'
@@ -73,8 +78,16 @@ export const routes = [
             },
             {
                 name: '流程模型',
-                path: '/model',
+                path: 'model',
                 component: () => import('@/pages/sysConfig/model.vue'),
+                meta: {
+                    icon: 'Setting'
+                }
+            },
+            {
+                name: '审核配置',
+                path: 'approvalConfig',
+                component: () => import('@/pages/sysConfig/approvalConfig.vue'),
                 meta: {
                     icon: 'Setting'
                 }
@@ -86,10 +99,11 @@ export const routes = [
     }
 ]
 const router = createRouter({
-    history: createWebHistory(),//工作模式 ，还有一种是hash
+    // history: createWebHistory(),//工作模式 ，还有一种是hash
+    history: createWebHashHistory(),//工作模式 
     routes: [{
         path: '/',
-        redirect: '/files',
+        redirect: '/fileManagement/files',
     }, {
         name: 'notFound',
         path: '/:pathMatch(.*)*',
@@ -105,6 +119,15 @@ const router = createRouter({
         component: () => import('@/pages/home/index.vue'), //pages下的vue文件
         children: routes
     }],
+    scrollBehavior(to, from, savedPosition) {
+        return { top: 0 }
+
+        if (savedPosition) {
+            return savedPosition
+        } else {
+            return { top: 0 }
+        }
+    }
 })
 
 // 路由守卫

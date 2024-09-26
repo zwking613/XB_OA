@@ -46,13 +46,13 @@ export const useFileStore = defineStore("file", {
       }
     },
     // 删除文件
-    async removeFile(params, callback, type) {
+    async removeFile(params,callback, type) {
       try {
         const result = await filesServices.deleteFile(params);
         if (result.code === 200) {
           ElMessage.success("删除文件成功");
           this.fetchFileList({ type });
-          callback && callback();
+          callback&&callback()
         } else {
           ElMessage.error(result.message || "删除文件失败");
         }

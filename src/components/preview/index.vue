@@ -12,7 +12,15 @@
         <PdfPreview v-else-if="fileType === 'pdf'" page-scale="page-fit" :width="1000" theme="light"
             :src="previewData.src" />
         <!-- 预览图片 -->
-        <img v-else-if="fileType === 'png' || fileType === 'jpg'" :src="previewData.src" />
+        <el-image v-else-if="fileType === 'png' || fileType === 'jpg'" :src="previewData.src" alt="流程图" fit="contain"
+            :preview-src-list="[previewData.src]" style="width: 100%; height: 100%;"
+            :zoom-rate="1.2" :initial-index="0" :min-scale="0.2" :max-scale="5">
+            <template #error>
+                <div class="image-slot">
+                    <span>加载失败</span>
+                </div>
+            </template>
+        </el-image>
         <!-- 预览doc -->
         <!-- <doc-viewer v-else-if="fileType === 'doc'" :src="fileUrl" /> -->
         <!-- 预览xls -->

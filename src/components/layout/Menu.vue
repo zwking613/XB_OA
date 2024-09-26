@@ -9,7 +9,7 @@
           </el-icon>
           <span>{{ route.name }}</span>
         </template>
-        <el-menu-item v-for="child in route.children" :key="child.path" :index="child.path">
+        <el-menu-item v-for="child in route.children" :key="route.path + child.path" :index="route.path + child.path">
           <el-icon v-if="child.meta && child.meta.icon">
             <component :is="child.meta.icon" />
           </el-icon>
@@ -32,6 +32,7 @@ import { routes } from "@/router";
 import { ref } from "vue";
 const isCollapse = ref(false);
 const router = useRouter();
+console.log(router.currentRoute.value.path)
 const defaultActive = ref(router.currentRoute.value.path);
 </script>
 

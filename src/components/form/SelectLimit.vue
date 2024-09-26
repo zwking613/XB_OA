@@ -16,6 +16,7 @@
     @clear="handleClear"
     @blur="handleBlur"
     @focus="handleFocus"
+    :disabled="disabled"
   >
     <el-option
       v-for="item in options"
@@ -56,6 +57,7 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  
   // 搜索时使用的键名
   searchKey:{
     type: String,
@@ -63,7 +65,7 @@ const props = defineProps({
   },
   // 选项值的键名
   valueKey:{
-    type: String,
+    type: [String, Array],
     default: 'id'
   },
   // 选项标签的键名
@@ -85,6 +87,10 @@ const props = defineProps({
             pageSize: 100,
         }
     }
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -127,7 +133,9 @@ const remoteSearch = async (e) => {
         data = response[props.dataKey]
       }
       options.value = data && data.map(item => ({
-        value: item[props.valueKey],
+        value:Array.isArray(props.valueKey) ? props.valueKey.map(key => {
+          return item[key]
+        }).join('%') : item[props.valueKey],
         label: item[props.labelKey]
       }));
     } catch (error) {

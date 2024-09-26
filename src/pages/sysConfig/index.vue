@@ -1,18 +1,12 @@
 <template>
-  <div class="app">
-    <!-- 展示区 -->
-    <div class="main-content">
-      <RouterView>
+    <div>
+       <RouterView>
         <template #default="{ Component, route }">
           <transition name="fade" mode="slide-right">
             <component :is="Component" :key="route.path" />
           </transition>
         </template>
-      </RouterView>
+       </RouterView>
     </div>
-  </div>
 </template>
 
-<script setup name="App">
-
-</script>

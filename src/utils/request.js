@@ -77,7 +77,7 @@ request.interceptors.response.use(
             case 500:
                 // 服务器错误
                 console.error('Internal Server Error:', error.response.data);
-                ElMessage.error('服务器错误，请稍后再试');
+                ElMessage.error(error.response.data.message || '服务器错误，请稍后再试');
                 throw new Error('服务器错误，请稍后再试');
             default:
                 // 其他状态码

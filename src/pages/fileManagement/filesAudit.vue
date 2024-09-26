@@ -4,7 +4,7 @@
       <el-radio value="1" border>我分享的</el-radio>
       <el-radio value="2" border>由我审核</el-radio>
     </el-radio-group>
-    
+
     <el-dialog v-model="userDialogVisible" title="分享人" width="400px" destroy-on-close :before-close="userHandleClose">
       <el-form :model="formUser" ref="formUserRef">
         <el-form-item label="分享人" prop="sharePerson">
@@ -23,12 +23,14 @@
         </span>
       </template>
     </el-dialog>
-    <Grid :loading="fileAuditStore.loading" :fetchData="fetchData" :columns="columns" :list="fileAuditStore.auditList"
-      :delete="handleDelete" :actions="actions" />
+    <TableModule :loading="fileAuditStore.loading" :column="columns" :data="fileAuditStore.auditList" 
+      @del="handleDelete" @refresh="fetchData"  :actions="actions">
+    </TableModule>
+    <!-- <Grid :loading="fileAuditStore.loading" :fetchData="fetchData" :columns="columns" :list="fileAuditStore.auditList"
+      :delete="handleDelete" :actions="actions" /> -->
   </div>
 </template>
 <script setup lang="jsx">
-import { ref, onMounted, reactive,watch } from "vue";
 import { useFileAuditStore } from "@/stores/filesAudit";
 
 const fileAuditStore = useFileAuditStore();
@@ -36,6 +38,7 @@ const searchType = ref('1');
 
 const userDialogVisible = ref(false);
 const formUserRef = ref(null);
+
 const formUser = ref({
   sharePerson: '',
 });
@@ -59,7 +62,19 @@ const submitUserForm = (type) => {
 
 
 const handleSearchTypeChange=(e)=>{
-    searchType.value = e;
+  if(e === '2'){
+    actions.value = [
+      {
+        title: '审核',
+        icon: 'Compass',
+        color: "#FF8040",
+        handler: handleAudit
+      }
+    ]
+  }else{
+    actions.value = []
+  }
+  searchType.value = e;
 }
 
 const handleAudit = async ({id}) => {
@@ -70,14 +85,6 @@ const handleAudit = async ({id}) => {
    
 };
 
-const actions = [
-  {
-    label: '审核',
-    type: 'success',
-    onClick: handleAudit,
-  },
-];
-
 const handleDelete = (row)=>{
   fileAuditStore.deleteAudit(row.id);
 }
@@ -86,14 +93,14 @@ const fetchData = async ({ pageNo=1, pageSize=10 }={}) => {
 };
 
 const columns = [
-  { prop: 'id', label: '序号', width: 80, align: 'center' },
-  { prop: 'fileName', label: '文件名', align: 'center' },
-  { prop: 'submitUserName', label: '提交用户', align: 'center' },
-  { prop: 'submitTime', label: '提交时间', align: 'center' },
-  { prop: 'personInChargeName', label: '审核人', align: 'center' },
-  { prop: 'auditTime', label: '审核时间', align: 'center' },
+  { props: 'id', label: '序号', width: 80, align: 'center' },
+  { props: 'fileName', label: '文件名', align: 'center' },
+  { props: 'submitUserName', label: '提交用户', align: 'center' },
+  { props: 'submitTime', label: '提交时间', align: 'center' },
+  { props: 'personInChargeName', label: '审核人', align: 'center' },
+  { props: 'auditTime', label: '审核时间', align: 'center' },
   {
-    prop: 'result',
+    props: 'result',
     label: '状态',
     align: 'center',
     customRender: ({ row }) => (
@@ -111,6 +118,7 @@ const columns = [
     ),
   },
 ];
+const actions = ref()
 
 onMounted(() => {
   fetchData();
@@ -121,7 +129,8 @@ watch(
   () => {
     fetchData();
   },
-  { deep: true }
+  { immediate: true, deep: true }
+  
 );
 
 

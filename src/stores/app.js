@@ -17,7 +17,7 @@ export const useAppStore = defineStore('app', {
       if (result.code === 200) {
         ElMessage.success('登录成功!')
         localStorage.setItem('token', result.list || '')
-        router.push('/files')
+        router.push('/fileManagement/files')
       } else {
         ElMessage.error(result.list)
       }

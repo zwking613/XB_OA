@@ -69,7 +69,7 @@
               :value="user.id" />
           </el-select> -->
           <SelectLimit v-model="formUser.users" url="/user/page" :dataKey="['list', 'list']" labelKey="userName"
-            valueKey="id" searchKey="userName" :change="onChange" placeholder="请选择用户" :multiple="true"/>
+            valueKey="id" searchKey="name"  placeholder="请选择用户" :multiple="true"/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -86,7 +86,7 @@
 
 <script setup name="User">
 import { useDepartmentStore } from "@/stores/department";
-import SelectLimit from '@/components/from/SelectLimit.vue';
+import SelectLimit from '@/components/form/SelectLimit.vue';
 import { onMounted, ref } from "vue";
 const departmentStore = useDepartmentStore();
 const dialogVisible = ref(false);
