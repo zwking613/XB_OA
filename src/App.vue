@@ -3,11 +3,6 @@
     <!-- 展示区 -->
     <div class="main-content">
       <RouterView>
-        <template #default="{ Component, route }">
-          <transition name="fade" mode="slide-right">
-            <component :is="Component" :key="route.path" />
-          </transition>
-        </template>
       </RouterView>
     </div>
   </div>

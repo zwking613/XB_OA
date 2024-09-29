@@ -7,7 +7,7 @@
 <script setup>
 import { ref } from 'vue';
 
-const src = ref(process.env.NODE_ENV === 'development' ? 'http://192.168.3.129:8088/#/processes' : 'http://loclhost:8088/#/processes');
+const src = ref(process.env.NODE_ENV === 'development' ? 'http://192.168.3.129:8088/#/processes' : 'http://192.168.3.251:8809/api/#/processes');
 
 </script>
 

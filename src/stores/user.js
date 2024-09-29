@@ -41,7 +41,7 @@ export const useUserStore = defineStore("user", {
                     this.getUserList();
                 }
                 else{
-                    ElMessage.error(result.message || "新增用户失败");
+                    ElMessage.error(result.list || "新增用户失败");
                 }
             } catch (error) {
                 console.error("新增用户失败", error);

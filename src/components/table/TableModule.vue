@@ -79,7 +79,7 @@
 
     <!-- 分页 -->
     <el-pagination v-if="tableData.isPaging" :currentPage="data.pageNo" background :page-size="data.pageSize"
-      layout="total, prev, pager, next  " :total="data.totalCount" @current-change="handleCurrentChange" />
+      layout="total, prev, pager, next  " :total="data.totalCount || 0" @current-change="handleCurrentChange" />
     <!-- 编辑dialog -->
     <DialogModule :dialogConfig="editDialogConfig" @onCancel="editCancel" @onConfirm="editSubmit" ref="dialogModule">
       <FormModule ref="editRefForm" :fromConfig="editFormConfig"></FormModule>
@@ -266,6 +266,9 @@ export default {
       editFormConfig.form.id = rowData.id;
       const rowDataKeys = Object.keys(rowData);
       editFormConfig.fields.forEach((item) => {
+        if (item.append) {
+          item.append.value = rowData[item.appendProp];
+        }
         if (rowDataKeys.includes(item.prop)) {
           item.value = rowData[item.prop];
         }

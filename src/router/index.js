@@ -96,6 +96,14 @@ export const routes = [
         meta: {
             icon: 'Setting'
         }
+    },
+    {
+        name: 'PPS',
+        path: '/pps/',
+        component: () => import('@/pages/pps/index.vue'),
+        meta: {
+            icon: 'Setting'
+        }
     }
 ]
 const router = createRouter({
