@@ -49,8 +49,8 @@ const loginFormRef = ref(null)
 const loading = ref(false)
 
 const loginForm = reactive({
-  phone: '',
-  password: ''
+  phone: '12345',
+  password: '12345'
 })
 
 const rules = {

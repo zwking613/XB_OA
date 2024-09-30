@@ -85,20 +85,36 @@ export const routes = [
                 }
             },
             {
-                name: '审核配置',
-                path: 'approvalConfig',
-                component: () => import('@/pages/sysConfig/approvalConfig.vue'),
+                name: '配置',
+                path: 'config',
+                component: () => import('@/pages/sysConfig/config.vue'),
                 meta: {
                     icon: 'Setting'
                 }
             }
+            // {
+            //     name: '审核配置',
+            //     path: 'approvalConfig',
+            //     component: () => import('@/pages/sysConfig/approvalConfig.vue'),
+            //     meta: {
+            //         icon: 'Setting'
+            //     }
+            // },
+            // {
+            //     name: '项目配置',
+            //     path: 'projectConfig',
+            //     component: () => import('@/pages/sysConfig/projectConfig.vue'),
+            //     meta: {
+            //         icon: 'Setting'
+            //     }
+            // }
         ],
         meta: {
             icon: 'Setting'
         }
     },
     {
-        name: 'PPS',
+        name: '项目推进',
         path: '/pps/',
         component: () => import('@/pages/pps/index.vue'),
         meta: {

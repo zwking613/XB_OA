@@ -11,10 +11,10 @@ import excel from '@/assets/file_icons/excel.png'
 import defaultIcon from '@/assets/file_icons/default.png'
 
 export const allMenu = [
-    {
-        label: '查看',
-        action: 'view',
-    },
+    // {
+    //     label: '查看',
+    //     action: 'view',
+    // },
     {
         label: '移动',
         action: 'move',

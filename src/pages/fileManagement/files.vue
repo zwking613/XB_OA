@@ -1,36 +1,21 @@
 <template>
   <div>
-    <el-container >
+    <el-container>
       <el-aside width="300px" class="border-r">
         <!-- 上传文件 -->
-        <el-upload
-          :before-upload="handleBeforeUpload"
-          :on-error="handleError"
-          :on-success="handleSuccess"
-          :show-file-list="false"
-          :action="upload"
-          :data="{ model: 'CLOUD' }"
-          :multiple="true"
-          :headers="{
+        <el-upload :before-upload="handleBeforeUpload" :on-error="handleError" :on-success="handleSuccess"
+          :show-file-list="false" :action="upload" :data="{ model: 'CLOUD' }" :multiple="true" :headers="{
             token: headers,
-          }"
-        >
+          }">
           <el-button type="primary" class="w-[275px]">上传文件</el-button>
           <template #tip>
             <div class="el-upload__tip">暂不支持 doc/xls 格式文件上传 文件大小限制50M</div>
           </template>
         </el-upload>
         <!-- 目录 -->
-        <el-menu
-          :default-active="defaultActive"
-          class="h-[calc(100vh-250px)] el-menu-vertical-demo"
-          @select="handleSelect"
-        >
-          <el-menu-item
-            v-for="(item, index) in directory"
-            :key="index"
-            :index="(index + 1).toString()"
-          >
+        <el-menu :default-active="defaultActive" class="h-[calc(100vh-250px)] el-menu-vertical-demo"
+          @select="handleSelect">
+          <el-menu-item v-for="(item, index) in directory" :key="index" :index="(index + 1).toString()">
             <el-icon>
               <component :is="item.icon" />
             </el-icon>
@@ -41,42 +26,20 @@
 
       <el-main oncontextmenu="return false;">
         <!-- 文件操作栏 -->
-        <div
-          class="flex items-center justify-between w-full mb-4 border-indigo-[#e3e3e3] border-solid h-8"
-        >
+        <div class="flex items-center justify-between w-full mb-4 border-indigo-[#e3e3e3] border-solid h-8">
           <div>
-            <el-checkbox v-model="selectAll" @change="handleSelectAll"
-              >全选</el-checkbox
-            >
-            <el-button
-              type="danger"
-              class="ml-4"
-              :disabled="!selectedFiles.length"
-              @click="handleDelete"
-              >删除</el-button
-            >
-            <el-button type="primary" class="ml-4" @click="refreshFiles"
-              >刷新</el-button
-            >
+            <el-checkbox v-model="selectAll" @change="handleSelectAll">全选</el-checkbox>
+            <el-button type="danger" class="ml-4" :disabled="!selectedFiles.length" @click="handleDelete">删除</el-button>
+            <el-button type="primary" class="ml-4" @click="refreshFiles">刷新</el-button>
             <el-button type="primary" class="ml-4" @click="newFolder">{{
               isNewFolder ? "取消新建" : "新建文件夹"
-            }}</el-button>
-            <el-button
-              v-if="nowPath.length > 0"
-              type="primary"
-              icon="el-icon-back"
-              @click="handleGoBack"
-              class="ml-4"
-            >
+              }}</el-button>
+            <el-button v-if="nowPath.length > 0" type="primary" icon="el-icon-back" @click="handleGoBack" class="ml-4">
               返回上一级
             </el-button>
           </div>
           <div>
-            <el-radio-group
-              v-model="viewMode"
-              class="ml-4 float-end"
-              @change="handleViewModeChange"
-            >
+            <el-radio-group v-model="viewMode" class="ml-4 float-end" @change="handleViewModeChange">
               <el-radio value="list">列表视图</el-radio>
               <el-radio value="grid">网格视图</el-radio>
             </el-radio-group>
@@ -85,86 +48,57 @@
 
         <!-- 文件列表 -->
         <div class="file-list-container">
-          <el-empty
-            description="暂无文件"
-            v-if="fileStore.fileList.length === 0"
-          />
+          <el-empty description="暂无文件" v-if="fileStore.fileList.length === 0" />
           <!-- 返回按钮 -->
 
           <ul v-else :class="[viewMode === 'grid' ? 'flex flex-wrap' : '']">
-            <li
-              v-if="isNewFolder"
-              :class="[
-                viewMode === 'grid'
-                  ? 'w-[120px] h-16 inline-block'
-                  : 'w-[100%] flex',
-                'p-2  hover:bg-gray-100 break-words cursor-pointer',
-              ]"
-              oncontextmenu="return false;"
-            >
-              <el-input
-                ref="newFolderInput"
-                v-model="newFolderName"
-                class="w-auto"
-                @blur="handleNewFolderBlur"
-                :autofocus="isNewFolder"
-              ></el-input>
+
+            <li v-if="isNewFolder" :class="[
+              viewMode === 'grid'
+                ? 'w-[120px] h-16 inline-block'
+                : 'w-[100%] flex',
+              'p-2  hover:bg-gray-100 break-words cursor-pointer',
+            ]" oncontextmenu="return false;">
+              <el-input ref="newFolderInput" v-model="newFolderName" class="w-auto" @blur="handleNewFolderBlur"
+                :autofocus="isNewFolder"></el-input>
               <!-- <el-input autofocus class="w-auto" v-model="newFolderName" @blur="handleNewFolderBlur"></el-input> -->
             </li>
             <!-- 文件项 -->
-            <li
-              :checked="file.selected"
-              @click="(e) => updateSelectedFiles(e, file, 'li')"
-              @contextmenu.prevent="handleContextMenu($event, file)"
-              v-for="file in fileStore.fileList"
-              :key="file.id"
+            <li :checked="file.selected" @click="(e) => updateSelectedFiles(e, file, 'li')"
+              @contextmenu.prevent="handleContextMenu($event, file)" v-for="file in fileStore.fileList" :key="file.id"
               :class="[
                 viewMode === 'grid'
                   ? 'w-[120px] h-16 inline-block'
                   : 'w-[600px] flex',
                 'p-2  hover:bg-gray-100 break-words cursor-pointer',
-              ]"
-              oncontextmenu="return false;"
-            >
+              ]" oncontextmenu="return false;">
               <div class="flex items-center">
                 <div :class="[viewMode === 'list' ? 'w-8 h-8' : 'w-3 h-3']">
                   <el-icon size="20" v-if="file.selected" color="#00FF40">
                     <SuccessFilled />
                   </el-icon>
                 </div>
-                <img
-                  :src="getFileIcon(file.type)"
-                  alt="file icon"
-                  class="ml-3 w-8 h-8"
-                />
+                <img :src="getFileIcon(file.type)" alt="file icon" class="ml-3 w-8 h-8" />
               </div>
               <!-- 文件重命名输入框 -->
               <div v-if="renameFile.fileId === file.fileId" class="w-[300px]">
-                <el-input
-                  :key="file.fileId"
-                  :autofocus="renameFile.fileId === file.fileId"
-                  class="w-auto"
-                  v-model="renameFile.fileName"
-                  @blur="handleRenameBlur(file)"
-                ></el-input>
+                <el-input :key="file.fileId" :autofocus="renameFile.fileId === file.fileId" class="w-auto"
+                  v-model="renameFile.fileName" @blur="handleRenameBlur(file)"></el-input>
               </div>
               <!-- 文件名显示 -->
-              <div
-                v-else
-                :class="[
-                  viewMode === 'grid'
-                    ? 'mt-2 w-full truncate text-[12px]'
-                    : 'ml-2 w-[300px] truncate text-[12px] flex items-center',
-                  'text-center',
-                ]"
-              >
-                {{ file.fileName }}
-              </div>
+              <el-tooltip v-else :show-after="500" class="box-item" effect="dark" :content="file.fileName"
+                placement="bottom">
+                <div :class="[
+                viewMode === 'grid'
+                  ? 'mt-2 w-full truncate text-[12px]'
+                  : 'ml-2 w-[300px] truncate text-[12px] flex items-center',
+                'text-center',
+              ]">
+                  {{ file.fileName }}
+                </div>
+              </el-tooltip>
               <!-- 列表视图下显示上传时间 -->
-              <div
-                v-if="viewMode === 'list'"
-                class="flex items-center ml-5  truncate text-[12px]"
-              >
+              <div v-if="viewMode === 'list'" class="flex items-center ml-5  truncate text-[12px]">
                 {{ file.uploadTime }}
               </div>
             </li>
@@ -172,29 +106,15 @@
         </div>
 
         <!-- 右键菜单 -->
-        <ul
-          v-if="contextMenu.visible"
-          :style="{
-            top: contextMenu.top + 'px',
-            left: contextMenu.left + 'px',
-          }"
-          class="absolute z-50 bg-white shadow-xl rounded-md list-none w-[100px]"
-        >
-          <li
-            v-for="item in contextMenuList"
-            :key="item.action"
-            @click="handleContextMenuAction(item.action)"
-            class="p-2 text-[12px] text-center cursor-pointer hover:bg-gray-100"
-          >
-            <el-dropdown
-              v-if="item.action === 'move'"
-              @command="handleMoveFile"
-              trigger="hover"
-              placement="right"
-            >
+        <ul v-if="contextMenu.visible" :style="{
+          top: contextMenu.top + 'px',
+          left: contextMenu.left + 'px',
+        }" class="absolute z-50 bg-white shadow-xl rounded-md list-none w-[100px]">
+          <li v-for="item in contextMenuList" :key="item.action" @click="handleContextMenuAction(item.action)"
+            class="p-2 text-[12px] text-center cursor-pointer hover:bg-gray-100">
+            <el-dropdown v-if="item.action === 'move'" @command="handleMoveFile" trigger="hover" placement="right">
               <span
-                class="el-dropdown-link p-2 text-[12px] text-center cursor-pointer hover:bg-gray-100 flex items-center justify-between"
-              >
+                class="el-dropdown-link p-2 text-[12px] text-center cursor-pointer hover:bg-gray-100 flex items-center justify-between">
                 {{ item.label }}
                 <el-icon class="el-icon--right">
                   <arrow-right />
@@ -202,12 +122,12 @@
               </span>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item
-                    v-for="(folder, index) in moveFileList()"
-                    :key="folder.fileId + '' + index"
-                    :command="folder.fileId"
-                  >
-                    {{ folder.fileName }}
+                    <el-dropdown-item v-for="(folder, index) in moveFileList()" :key="folder.fileId + '' + index"
+                      :command="folder.fileId">
+                      {{ folder.fileName }}
+                    </el-dropdown-item>
+                  <el-dropdown-item :command="0">
+                    移出
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -218,35 +138,14 @@
       </el-main>
     </el-container>
     <!-- 文件预览 Modal -->
-    <el-dialog
-      v-model="previewDialogVisible"
-      title="文件预览"
-      destroy-on-close
-      :before-close="handleClosePreview"
-    >
-      <Preview
-        :id="previewId"
-        :url="previewUrl"
-        :type="previewFileType"
-        :callback="handleClosePreview"
-      />
+    <el-dialog v-model="previewDialogVisible" title="文件预览" destroy-on-close :before-close="handleClosePreview">
+      <Preview :id="previewId" :url="previewUrl" :type="previewFileType" :callback="handleClosePreview" />
     </el-dialog>
-    <el-dialog
-      v-model="userDialogVisible"
-      title="分享文件"
-      width="400px"
-      destroy-on-close
-      :before-close="userHandleClose"
-    >
+    <el-dialog v-model="userDialogVisible" title="分享文件" width="400px" destroy-on-close :before-close="userHandleClose">
       <el-form :model="formUser" :rules="userRules" ref="formUserRef">
         <el-form-item label="分享人" prop="sharePerson">
           <el-select v-model="formUser.sharePerson" placeholder="请选择分享人">
-            <el-option
-              v-for="user in fileStore.userList"
-              :key="user.id"
-              :label="user.userName"
-              :value="user.id"
-            />
+            <el-option v-for="user in fileStore.userList" :key="user.id" :label="user.userName" :value="user.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -405,18 +304,18 @@ const handleViewModeChange = (e) => {
 };
 
 // 处理文件上传前
-const handleBeforeUpload = ({name,size}) => {
-  console.log(name,size)
+const handleBeforeUpload = ({ name, size }) => {
+  console.log(name, size)
   const allowedTypes = ["doc", "xls"];
-  if(size > 50 * 1024 * 1024) {
+  if (size > 50 * 1024 * 1024) {
     ElMessage.error('文件大小不能超过 50MB');
     return false;
   }
-  if(allowedTypes.includes(name.split(".")[1])) {
+  if (allowedTypes.includes(name.split(".")[1])) {
     ElMessage.error('暂时不支持上传 doc/xls 格式文件');
     return false;
   }
- return true;
+  return true;
 };
 
 // 处理文件上传成功
@@ -433,28 +332,50 @@ const handleError = (error, file, fileList) => {
   console.log(error, file, fileList);
   ElMessage.error(file.name + error.list);
 };
-
+const clickTimer = ref(null);
 // 更新选中的文件
 const updateSelectedFiles = (e, file, type) => {
-  if (renameFile.fileId) return;
-  let isChecked;
-  const selected = [];
-  if (type === "li") {
-    isChecked = !(e.target.closest("li").getAttribute("checked") === "true");
-  } else {
-    isChecked = e;
-  }
-  fileStore.$patch({
-    fileList: fileStore.fileList.map((item) => {
-      if (item.fileId === file.fileId) {
-        item.selected = isChecked;
+  if (!clickTimer.value) {
+    clickTimer.value = setTimeout(() => {
+      if (renameFile.fileId) return;
+      let isChecked;
+      const selected = [];
+      if (type === "li") {
+        isChecked = !(e.target.closest("li").getAttribute("checked") === "true");
+      } else {
+        isChecked = e;
       }
-      if (item.selected) selected.push(item.fileId);
-      return item;
-    }),
-  });
-  selectedFiles.value = selected;
-  selectAll.value = selected.length === fileStore.fileList.length;
+      fileStore.$patch({
+        fileList: fileStore.fileList.map((item) => {
+          if (item.fileId === file.fileId) {
+            item.selected = isChecked;
+          }
+          if (item.selected) selected.push(item.fileId);
+          return item;
+        }),
+      });
+      selectedFiles.value = selected;
+      selectAll.value = selected.length === fileStore.fileList.length;
+      clickTimer.value = null;
+    }, 600);
+  } else {
+    clearTimeout(clickTimer.value);
+    clickTimer.value = null;
+    if (file.type === "folder") {
+      nowPath.push(file.fileId);
+      fileStore.fetchFileList({
+        type: directory[defaultActive.value - 1].label,
+        nowPath: file.fileId,
+      });
+      return;
+    }
+    previewUrl.value = `${preview}?fileId=${file.fileId}`;
+    previewFileType.value = file.type;
+    previewId.value = file.fileId;
+    previewDialogVisible.value = true;
+  }
+  return
+
 };
 
 // 处理全选
@@ -519,7 +440,7 @@ const handleContextMenuAction = (action) => {
       console.log("Move file:", contextMenu.file);
       break;
     case "delete":
-      fileStore.removeFile(contextMenu.file.fileId, ()=>{},type);
+      fileStore.removeFile(contextMenu.file.fileId, () => { }, type);
       break;
     case "rename":
       renameFile.fileId = contextMenu.file.fileId;
@@ -624,6 +545,10 @@ onUnmounted(() => {
 });
 </script>
 <style scoped>
+/* 取消页面鼠标选择 */
+.file-list-container {
+  user-select: none;
+}
 .file-list-container {
   height: calc(100vh - 300px);
   overflow-y: auto;

@@ -5,8 +5,8 @@ export const useSysStore = defineStore("sys", {
     state: () => ({
        flowDiagramUrl:'', // 流程图url
        procdefList:[], 
-       selected:{},
-       submittedList:[]
+       selected:{}, // 当前选中的流程定义
+       submittedList:[], // 已提交列表
     }),
     getters: {
     },
