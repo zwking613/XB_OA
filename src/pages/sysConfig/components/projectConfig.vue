@@ -1,12 +1,12 @@
 <template>
     <TableModule :column="columns" :data="{
-        list: projectConfigStore.projectConfig
+        list: configStore.projectConfig
     }" @edit="edit" :editConfig="editConfig" @insert="insert" :insertConfig="editConfig" :tableConfig="tableConfig">
     </TableModule>
 </template>
 <script setup lang="jsx">
-import { useProjectConfigStore } from "@/stores/projectConfig"; 
-const projectConfigStore = useProjectConfigStore();
+import { useConfigStore } from "@/stores/config"; 
+const configStore = useConfigStore();
 const props = defineProps({
     type: {
         type: String,
@@ -35,33 +35,34 @@ const editConfig = reactive({
     },
 });
 const insert = ({ value, callback })=>{
-    let values = {
-        name: projectConfigStore.type,
-        value: value.name
-    }
-    if (projectConfigStore.projectConfig.length === 0){
-        values.value = value.name 
-    }
-    else{
-        values.value = value.name + ',' + projectConfigStore.projectConfig.map(item => item.name).join(',')
-    }
-    projectConfigStore.updateProjectConfig(values, callback)
+    // let values = {
+    //     name: configStore.type,
+    //     value: value.name
+    // }
+    // if (configStore.projectConfig.length === 0){
+    //     values.value = value.name 
+    // }
+    // else{
+    //     values.value = value.name + ',' + configStore.projectConfig.map(item => item.name).join(',')
+    // }
+    configStore.updateProject(value, callback)
 }
 const edit = ({ value, callback }) => {
-    let values = {
-        id: value.id,
-        name: projectConfigStore.type,
-        value: projectConfigStore.projectConfig.map(item => {
-            if (item.id === value.id) {
-                item.name = value.name
-            }
-            return item.name
-        }).join(',')
-    }
-    projectConfigStore.updateProjectConfig(values, callback)
+    // let values = {
+    //     id: value.id,
+    //     name: configStore.type,
+    //     value: configStore.projectConfig.map(item => {
+    //         if (item.id === value.id) {
+    //             item.name = value.name
+    //         }
+    //         return item.name
+    //     }).join(',')
+    // }
+    configStore.updateProject(value, callback)
 };
 
 onMounted(() => {
-    projectConfigStore.getProjectConfig(props.type);
+    // configStore.getProjectConfig(props.type);
+    configStore.getProjectList();
 });
 </script>

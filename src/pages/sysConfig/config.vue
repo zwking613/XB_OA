@@ -1,6 +1,7 @@
 <template>
     <el-tabs type="border-card" class="demo-tabs" @tab-click="handleClick">
-        <el-tab-pane >
+        <el-tab-pane>
+            <!-- name="approval" -->
             <template #label>
                 <span class="custom-tabs-label">
                     <el-icon>
@@ -32,7 +33,7 @@
                     <span>报销配置</span>
                 </span>
             </template>
-            <project-config type="reimbursement_items" />
+            <rei-type-config type="reimbursement_items" />
         </el-tab-pane>
         <!-- <el-tab-pane name="reimbursement_allocation">
             <template #label>
@@ -49,17 +50,20 @@
 </template>
 <script setup>
 import { Calendar } from '@element-plus/icons-vue'
-import ProjectConfig from './components/projectConfig.vue'
+import ProjectConfig from './components/ProjectConfig.vue'
 import ApprovalConfig from './components/approvalConfig.vue'
-import { useProjectConfigStore } from '@/stores/projectConfig'
-const projectConfigStore = useProjectConfigStore()
+import ReiTypeConfig from './components/ReiTypeConfig.vue'
+import { useConfigStore } from '@/stores/config'
+import { useApprovalConfigStore } from "@/stores/approvalConfig";
+const configStore = useConfigStore()
+const approvalConfigStore = useApprovalConfigStore();
 const handleClick = (tab, event) => {
     if (tab.props.name === 'project') {
-        projectConfigStore.getProjectConfig('project')
+        configStore.getProjectList()
     } else if (tab.props.name === 'reimbursement_items') {
-        projectConfigStore.getProjectConfig('reimbursement_items')
-    } else if (tab.props.name === 'reimbursement_allocation') {
-        projectConfigStore.getProjectConfig('reimbursement_allocation')
+        configStore.getReiTypeList()
+    }else{
+        approvalConfigStore.getApprovalConfig();
     }
 }
 </script>

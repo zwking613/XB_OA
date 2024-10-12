@@ -2,6 +2,14 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 export const routes = [
     {
+        name: '费用统计',
+        path: '/costStatistics',
+        component: () => import('@/pages/costStatistics/index.vue'),
+        meta: {
+            icon: 'HomeFilled'
+        }
+    },
+    {
         name: '文件管理',
         path: '/fileManagement/',
         component: () => import('@/pages/fileManagement/index.vue'),
@@ -127,7 +135,7 @@ const router = createRouter({
     history: createWebHashHistory(),//工作模式 
     routes: [{
         path: '/',
-        redirect: '/fileManagement/files',
+        redirect: '/costStatistics',
     }, {
         name: 'notFound',
         path: '/:pathMatch(.*)*',

@@ -122,10 +122,10 @@
               </span>
               <template #dropdown>
                 <el-dropdown-menu>
-                    <el-dropdown-item v-for="(folder, index) in moveFileList()" :key="folder.fileId + '' + index"
-                      :command="folder.fileId">
-                      {{ folder.fileName }}
-                    </el-dropdown-item>
+                  <el-dropdown-item v-for="(folder, index) in moveFileList()" :key="folder.fileId + '' + index"
+                    :command="folder.fileId">
+                    {{ folder.fileName }}
+                  </el-dropdown-item>
                   <el-dropdown-item :command="0">
                     移出
                   </el-dropdown-item>
@@ -144,9 +144,11 @@
     <el-dialog v-model="userDialogVisible" title="分享文件" width="400px" destroy-on-close :before-close="userHandleClose">
       <el-form :model="formUser" :rules="userRules" ref="formUserRef">
         <el-form-item label="分享人" prop="sharePerson">
-          <el-select v-model="formUser.sharePerson" placeholder="请选择分享人">
+          <SelectTree v-model="formUser.sharePerson" url="/department/list" dataKey="list" labelKey="name"
+            valueKey="id" placeholder="请选择分享人" :customData="customData" :multiple="true" />
+          <!-- <el-select v-model="formUser.sharePerson" placeholder="请选择分享人">
             <el-option v-for="user in fileStore.userList" :key="user.id" :label="user.userName" :value="user.id" />
-          </el-select>
+          </el-select> -->
         </el-form-item>
       </el-form>
       <template #footer>
@@ -305,7 +307,6 @@ const handleViewModeChange = (e) => {
 
 // 处理文件上传前
 const handleBeforeUpload = ({ name, size }) => {
-  console.log(name, size)
   const allowedTypes = ["doc", "xls"];
   if (size > 50 * 1024 * 1024) {
     ElMessage.error('文件大小不能超过 50MB');
@@ -355,7 +356,7 @@ const updateSelectedFiles = (e, file, type) => {
         }),
       });
       selectedFiles.value = selected;
-      selectAll.value = selected.length === fileStore.fileList.length;
+      selectAll.value = selected.length === fileStore.fileList.length && fileStore.fileList.length > 0;
       clickTimer.value = null;
     }, 600);
   } else {
@@ -496,12 +497,23 @@ const userHandleClose = () => {
     sharePerson: "",
   };
 };
+const customData = (data)=>{
+  return data.map(item => {
+    return {
+      ...item,
+      value:item.id,
+      name:item.name || item.userName,
+      children: item.users ? customData(item.users) : []
+    }
+  })
+}
+
 const submitUserForm = () => {
   formUserRef.value.validate((valid) => {
     if (valid) {
       fileStore.shareFileAction(
         {
-          sharePerson: formUser.value.sharePerson,
+          sharePerson: formUser.value.sharePerson.join(','),
           fileId: contextMenu.file.fileId,
         },
         userHandleClose

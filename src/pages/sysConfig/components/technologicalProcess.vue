@@ -43,7 +43,8 @@
           <template v-if="selectKey === 'reimbursement_process'">
             <el-form-item label="费用类型" required prop="expenseType">
               <el-select v-model="form.expenseType" placeholder="请选择费用类型" @change="expenseTypeChange">
-                <el-option v-for="type in expenseTypes" :key="type.value" :label="type.label" :value="type.value"></el-option>
+                <el-option v-for="type in expenseTypes" :key="type.value" :label="type.label"
+                  :value="type.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="附件" required prop="attachmentId">
@@ -56,7 +57,7 @@
               <el-input type="number" v-model="form.reimbursementAmount" placeholder="请输入报销金额"></el-input>
             </el-form-item>
             <el-form-item label="所属项目">
-              <SelectLimit v-model="form.project" url="/sys/getListByName?name=project" dataKey="list" labelKey="name"
+              <SelectLimit v-model="form.project" url="/sys/getProjectList" dataKey="list" labelKey="name"
                 valueKey="name" searchKey="name" placeholder="请选择所属项目" tag-type="warning" />
             </el-form-item>
             <el-form-item label="地点" required prop="place">
@@ -72,7 +73,7 @@
 
           <template v-if="selectKey === 'leave' || selectKey === 'reimbursement_process'">
             <el-form-item label="开始时间" required prop="startTime">
-              <el-date-picker v-model="form.startTime" type="date" placeholder="选择日期" format="YYYY/MM/DD" 
+              <el-date-picker v-model="form.startTime" type="date" placeholder="选择日期" format="YYYY/MM/DD"
                 :disabled-date="getDisabledDate"></el-date-picker>
               <el-select class="select_width" v-model="form.startPeriod" placeholder="选择时间">
                 <el-option label="上午" value="上午"></el-option>
@@ -81,7 +82,7 @@
             </el-form-item>
 
             <el-form-item label="结束时间" required prop="endTime">
-              <el-date-picker v-model="form.endTime" type="date" placeholder="选择日期" format="YYYY/MM/DD" 
+              <el-date-picker v-model="form.endTime" type="date" placeholder="选择日期" format="YYYY/MM/DD"
                 :disabled-date="getDisabledDate"></el-date-picker>
               <el-select class="select_width" v-model="form.endPeriod" placeholder="选择时间">
                 <el-option label="上午" value="上午"></el-option>
@@ -119,8 +120,8 @@
                 width="180">
                 <template #default="scope">
                   <SelectLimit v-if="form.expenseType !== 'IMPLEMENTATION_FEE'" v-model="scope.row.participant"
-                    url="/sys/getListByName?name=reimbursement_items" dataKey="list" labelKey="name" valueKey="name"
-                    searchKey="name" placeholder="请选择项目" tag-type="warning" />
+                    :url="`/sys/getReiTypeList?type=${form.expenseType}`" dataKey="list" labelKey="name" valueKey="name" searchKey="name"
+                    placeholder="请选择项目" tag-type="warning" />
                   <el-input v-else v-model="scope.row.participant" placeholder="请输入参与人"></el-input>
                 </template>
               </el-table-column>

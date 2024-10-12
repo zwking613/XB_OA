@@ -8,9 +8,11 @@
     <el-dialog v-model="userDialogVisible" title="分享人" width="400px" destroy-on-close :before-close="userHandleClose">
       <el-form :model="formUser" ref="formUserRef">
         <el-form-item label="分享人" prop="sharePerson">
-          <el-select v-model="formUser.sharePerson" placeholder="请选择分享人">
+          <SelectTree v-model="formUser.sharePerson" url="/department/list" dataKey="list" labelKey="name" valueKey="id"
+            placeholder="请选择分享人" :customData="customData" :multiple="true" />
+          <!-- <el-select v-model="formUser.sharePerson" placeholder="请选择分享人">
             <el-option v-for="user in fileAuditStore.userList" :key="user.id" :label="user.userName" :value="user.id" />
-          </el-select>
+          </el-select> -->
         </el-form-item>
       </el-form>
       <template #footer>
@@ -23,8 +25,8 @@
         </span>
       </template>
     </el-dialog>
-    <TableModule :loading="fileAuditStore.loading" :column="columns" :data="fileAuditStore.auditList" 
-      @del="handleDelete" @refresh="fetchData"  :actions="actions">
+    <TableModule :loading="fileAuditStore.loading" :column="columns" :data="fileAuditStore.auditList"
+      @del="handleDelete" @refresh="fetchData" :actions="actions">
     </TableModule>
     <!-- <Grid :loading="fileAuditStore.loading" :fetchData="fetchData" :columns="columns" :list="fileAuditStore.auditList"
       :delete="handleDelete" :actions="actions" /> -->
@@ -47,6 +49,17 @@ const userHandleClose = () => {
   formUser.value = {
     sharePerson: '',
   };
+}
+
+const customData = (data) => {
+  return data.map(item => {
+    return {
+      ...item,
+      value: item.id,
+      name: item.name || item.userName,
+      children: item.users ? customData(item.users) : []
+    }
+  })
 }
 const submitUserForm = (type) => {
   if (!type && !(formUser.value.sharePerson === '')){

@@ -1,8 +1,6 @@
 <template>
   <div class="processed">
-    <div class="processed-header">
-      <h2>已处理</h2>
-    </div>
+   123
   </div>
 </template>
 
@@ -14,6 +12,5 @@ const sysStore = useSysStore();
 
 <style scoped>
 .processed {
-  padding: 20px;
 }
 </style>

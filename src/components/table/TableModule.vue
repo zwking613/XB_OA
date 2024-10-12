@@ -84,7 +84,7 @@
     <DialogModule :dialogConfig="editDialogConfig" @onCancel="editCancel" @onConfirm="editSubmit" ref="dialogModule">
       <FormModule ref="editRefForm" :fromConfig="editFormConfig"></FormModule>
     </DialogModule>
-    <DialogModule :dialogConfig="insertDialogConfig" @onCancel="insertCancel" @onConfirm="insertSubmit"
+    <DialogModule  :dialogConfig="insertDialogConfig" @onCancel="insertCancel" @onConfirm="insertSubmit"
       ref="dialogModule">
       <FormModule ref="insertRefForm" :fromConfig="insertFormConfig"></FormModule>
     </DialogModule>
@@ -277,6 +277,12 @@ export default {
     };
     // 编辑关闭dialog
     let editCancel = () => {
+      editFormConfig.fields.forEach((item) => {
+        if (item.append) {
+          item.append.value = null;
+        }
+        item.value = null;
+      });
       editDialogConfig.visible = false;
     };
     // 编辑提交方法

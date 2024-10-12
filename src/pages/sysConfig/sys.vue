@@ -1,7 +1,7 @@
 <template>
   <TechnologicalProcess v-if="sysStore.flowDiagramUrl && sysStore.selected" :flowDiagramUrl="sysStore.flowDiagramUrl"
     :processDefinitionId="sysStore.selected.id" />
-  <el-tabs v-else style="height: 100%;" v-model="activeName" tab-position="left"  class="demo-tabs h-[calc(100vh-250px)] el-menu-vertical-demo"
+  <el-tabs v-else style="height: 100%;" v-model="activeName" tab-position="top"  class="demo-tabs h-[calc(100vh-250px)] el-menu-vertical-demo"
     @tab-click="handleTabsClick">
     <el-tab-pane label="发起申请" name="first">
       <LaunchApplication />
