@@ -53,10 +53,10 @@
                 <el-button size="small">上传附件</el-button>
               </el-upload>
             </el-form-item>
-            <el-form-item label="报销金额" required prop="reimbursementAmount">
+            <el-form-item v-if="form.expenseType === 'IMPLEMENTATION_FEE'" label="报销金额" required prop="reimbursementAmount">
               <el-input type="number" v-model="form.reimbursementAmount" placeholder="请输入报销金额"></el-input>
             </el-form-item>
-            <el-form-item label="所属项目">
+            <el-form-item label="所属项目" v-if="form.expenseType !=='DAILY_EXPENSES'" required prop="project">
               <SelectLimit v-model="form.project" url="/sys/getProjectList" dataKey="list" labelKey="name"
                 valueKey="name" searchKey="name" placeholder="请选择所属项目" tag-type="warning" />
             </el-form-item>
@@ -120,8 +120,8 @@
                 width="180">
                 <template #default="scope">
                   <SelectLimit v-if="form.expenseType !== 'IMPLEMENTATION_FEE'" v-model="scope.row.participant"
-                    :url="`/sys/getReiTypeList?type=${form.expenseType}`" dataKey="list" labelKey="name" valueKey="name" searchKey="name"
-                    placeholder="请选择项目" tag-type="warning" />
+                    :url="`/sys/getReiTypeList?type=${form.expenseType}`" dataKey="list" labelKey="name" valueKey="name"
+                    searchKey="name" placeholder="请选择项目" tag-type="warning" />
                   <el-input v-else v-model="scope.row.participant" placeholder="请输入参与人"></el-input>
                 </template>
               </el-table-column>
@@ -315,7 +315,7 @@ const prepareReimbursementData = () => {
       place: form.value.place,
       company: form.value.company,
       businessTravel: form.value.businessTravel,
-      expenseType: form.value.expenseType,
+      type: form.value.expenseType,
       reimbursementAmount: form.value.reimbursementAmount,
       project: form.value.project,
       department: form.value.department,

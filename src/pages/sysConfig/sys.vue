@@ -9,7 +9,7 @@
     <el-tab-pane label="待处理" name="second">
       <ToBeProcessed />
     </el-tab-pane>
-    <el-tab-pane label="已处理" name="third">
+    <!-- <el-tab-pane label="已处理" name="third">
       <Processed />
     </el-tab-pane>
     <el-tab-pane label="抄送我的" name="fourth">
@@ -17,7 +17,7 @@
     </el-tab-pane>
     <el-tab-pane label="已提交" name="five">
       <Submitted />
-    </el-tab-pane>
+    </el-tab-pane> -->
   </el-tabs>
 
 </template>
@@ -34,10 +34,14 @@ const sysStore = useSysStore();
 const activeName = ref('first');
 
 const handleTabsClick = ({props: {name}}) => {
-  console.log(name);
   // 已提交
   if(name === 'five'){
     sysStore.getSubmittedList();
+  }
+  // 待处理
+  else if(name === 'second'){
+    console.log('待处理');
+    sysStore.getTodoList();
   }
   // // 待处理
   // if(name === 'second'){

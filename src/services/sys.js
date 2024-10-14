@@ -35,3 +35,27 @@ export const getSubmittedList = () => post('/flowable/getInstantiateList',{
     searchType:2
 });
 
+
+
+
+// 获取待处理列表
+/**
+ * 
+ * @param {string} type reimbursement_process - 报销流程
+ * @returns 
+ */
+export const todoList = (params) => post('/flowable/getInstantiateList',params);
+
+
+export const updateItem = (params) => post('/reimbursement/updateItem',params);
+
+
+export const audit = (params) => post('/flowable/audit',params);
+
+
+
+
+
+
+
+

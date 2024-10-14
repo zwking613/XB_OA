@@ -8,8 +8,6 @@ import * as echarts from 'echarts';
 import { useCostStatisticsStore } from '@/stores/costStatistics'
 import { watch } from 'vue';
 const costStatisticsStore = useCostStatisticsStore()
-
-// const chartDom = document.getElementById('main');
 let myChart;
 
 const initChart = () => {
@@ -23,7 +21,7 @@ const initChart = () => {
         return all + userData[key];
     }, 0)
    
-    const waterMarkText = '雄博内部使用';
+    const waterMarkText = '雄博';
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = canvas.height = 100;
@@ -42,19 +40,26 @@ const initChart = () => {
             repeat: 'repeat'
         },
         tooltip: {},
+        
         title: [
             {
-                text: '项目统计明细',
+                text: costStatisticsStore.projectType + '明细',
                 subtext: '总计 ' + projectDataAll,
                 left: '56%',
                 top: '25%',
-                textAlign: 'center'
+                textStyle: {
+                    color: "#000"
+                },
+                textAlign: 'center',
             },
             {
-                text: '用户统计明细',
+                text: costStatisticsStore.userType + '明细',
                 subtext: '总计 ' + userDataAll,
                 left: '56%',
                 top: '75%',
+                textStyle: {
+                    color: "#000"
+                },
                 textAlign: 'center'
             },
             {
@@ -63,6 +68,9 @@ const initChart = () => {
                         return all + costStatisticsStore.pieProject[key];
                     }, 0),
                 left: '75%',
+                textStyle: {
+                    color: "#000"
+                },
                 textAlign: 'center'
             },
             {
@@ -72,6 +80,9 @@ const initChart = () => {
                     }, 0),
                 left: '75%',
                 top: '50%',
+                textStyle: {
+                    color: "#000"
+                },
                 textAlign: 'center' 
             }
         ],

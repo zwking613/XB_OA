@@ -39,6 +39,7 @@ export const useAppStore = defineStore('app', {
       if (result.code === 200) {
         ElMessage.success('退出登录成功！')
         localStorage.removeItem('token')
+        this.userInfo = {}
         router.push('/login')
       } else {
         ElMessage.error('退出登录失败！')

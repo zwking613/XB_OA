@@ -7,6 +7,20 @@ export const useSysStore = defineStore("sys", {
        procdefList:[], 
        selected:{}, // 当前选中的流程定义
        submittedList:[], // 已提交列表
+
+       searchType:'all', // 搜索类型
+       listType:'reimbursement_process', 
+
+
+
+       toBeProcessedList:{
+        list:[], 
+        pageSize:10,
+        pageNo:1,
+        totalCount:0,
+        filter:{},
+       }, // 待处理列表
+       
     }),
     getters: {
     },
@@ -56,6 +70,57 @@ export const useSysStore = defineStore("sys", {
                 }
             }catch(error){
                 console.error("获取已提交列表失败", error);
+            }
+        },
+
+
+
+        // 获取待处理列表
+
+        async getTodoList() {
+            try{
+                const result = await sysServices.todoList({
+                    type:this.listType,
+                    searchType:this.searchType
+                });
+                console.log(result)
+                if(result.code === 200){
+                   this.submittedList = result.list;
+                }
+               
+            }catch(error){
+                console.error("获取待处理列表失败", error);
+            }
+        },
+        async update(params,callback) {
+            try{
+                const result = await sysServices.updateItem(params);
+                console.log(result)
+                if(result.code === 200){
+                    this.getTodoList()
+                    ElMessage.success(result.list);
+                    callback && callback();
+                }
+                else{
+                    ElMessage.error(result.list);
+                }
+            }catch(error){
+                console.error("更新失败", error);
+            }
+        },
+        async audit(params, callback) {
+            try {
+                const result = await sysServices.audit(params);
+                if (result.code === 200) {
+                    this.getTodoList()
+                    ElMessage.success(result.list);
+                    callback && callback();
+                }
+                else {
+                    ElMessage.error(result.list);
+                }
+            } catch (error) {
+                console.error("审核失败", error);
             }
         },
     },
