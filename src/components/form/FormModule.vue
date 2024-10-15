@@ -154,12 +154,12 @@ export default {
         }
       }
       formParameter.fields.forEach(element => {
-        if (element.value) {
-          formParameter.form[element.prop] = element.value;
-          if (element.append) {
-            formParameter.form[element.append.prop] = element.append.value || element.append.label;
-          }
-        } else {
+        // if (element.value) {
+        //   formParameter.form[element.prop] = element.value;
+        //   if (element.append) {
+        //     formParameter.form[element.append.prop] = element.append.value || element.append.label;
+        //   }
+        // } else {
           if (element.type === "checkbox") {
             formParameter.form[element.prop] = [];
           } else {
@@ -168,9 +168,8 @@ export default {
               formParameter.form[element.append.prop] = element.append.value || element.append.label;
             } 
           }
-        }
+        // }
       });
-      console.log(formParameter.form)
     };
     // 初始化form数据
     onBeforeMount(() => {

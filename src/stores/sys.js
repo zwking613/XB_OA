@@ -25,6 +25,7 @@ export const useSysStore = defineStore("sys", {
             filter: {
                 searchType: 1,
             },
+
         }, // 待处理列表
     }),
     getters: {
@@ -77,8 +78,6 @@ export const useSysStore = defineStore("sys", {
                 console.error("获取已提交列表失败", error);
             }
         },
-
-
 
         // 获取待处理列表
 
@@ -141,5 +140,6 @@ export const useSysStore = defineStore("sys", {
                 console.error("获取历史记录失败", error);
             }
         }
+
     },
 });

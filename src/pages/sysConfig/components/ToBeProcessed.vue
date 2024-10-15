@@ -88,7 +88,7 @@
               <el-table-column prop="remark" label="备注"></el-table-column>
               <el-table-column label="修改" v-if="copyInfo.businessData.status === 'ACCOUNTING'">
                 <template #default="scope">
-                  <el-button link size="small" type="warning"  
+                  <el-button link size="small" type="warning"
                     @click="edit(scope.row, copyInfo.businessData)">编辑</el-button>
                 </template>
               </el-table-column>
@@ -133,7 +133,15 @@
             <span v-else>无</span>
           </el-descriptions-item>
         </el-descriptions>
-
+        <el-image :src="`/api/flowable/getTaskProcessDiagram?taskId=${copyInfo.id}`" alt="流程图"
+          fit="contain" style="width: 100%; height: 100%" :zoom-rate="1.2" :initial-index="0" :min-scale="0.2"
+          :max-scale="5" :preview-src-list="[`/api/flowable/getTaskProcessDiagram?taskId=${copyInfo.id}`]">
+          <template #error>
+            <div class="image-slot">
+              <span>加载失败</span>
+            </div>
+          </template>
+        </el-image>
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="dialogVisible = false">取消</el-button>
@@ -219,6 +227,10 @@ const type={
 const handleCopyMe = (item) => {
   copyInfo.value = item;
   dialogVisible.value = true;
+  // sysStore.getProgressUrl(item.id,()=>{
+   
+  // });
+  
 };
 
 

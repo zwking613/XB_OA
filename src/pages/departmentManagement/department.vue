@@ -11,12 +11,12 @@
         <el-form-item label="部门名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入部门名称" />
         </el-form-item>
-        <el-form-item label="部门主管" prop="managerId">
+        <!-- <el-form-item label="部门主管" prop="managerId">
           <el-select v-model="form.managerId" placeholder="请选择部门主管">
             <el-option v-for="user in departmentStore.userList" :key="user.id" :label="user.userName"
               :value="user.id" />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -40,14 +40,14 @@
               <User />
             </el-icon>
             {{ data.label }}
-            <el-tag v-if="data.isManager" class="ml-2" size="small" type="success">主管</el-tag>
+            <el-tag v-if="data.role" class="ml-2" size="small" :type="tagType(data.role)">{{ data.role }}</el-tag>
           </span>
           <span>
             <el-button v-if="data.type === 'department'" type="primary" size="small" @click.stop="handleAddUser(data)">
               添加用户
             </el-button>
-            <el-popconfirm title="确定删除吗?" @confirm="deleteDepartment(node, data, data.type)"
-              confirm-button-text="确定" cancel-button-text="取消">
+            <el-popconfirm title="确定删除吗?" @confirm="deleteDepartment(node, data, data.type)" confirm-button-text="确定"
+              cancel-button-text="取消">
               <template #reference>
                 <el-button type="danger" size="small">
                   删除
@@ -64,12 +64,13 @@
     <el-dialog v-model="userDialogVisible" title="添加用户" width="500px" destroy-on-close :before-close="userHandleClose">
       <el-form :model="formUser" :rules="userRules" ref="formUserRef">
         <el-form-item label="用户" prop="users">
-          <!-- <el-select v-model="formUser.users" placeholder="请选择用户" multiple>
-            <el-option v-for="user in departmentStore.userList" :key="user.id" :label="user.userName"
-              :value="user.id" />
-          </el-select> -->
           <SelectLimit v-model="formUser.users" url="/user/page" :dataKey="['list', 'list']" labelKey="userName"
-            valueKey="id" searchKey="name"  placeholder="请选择用户" :multiple="true"/>
+            valueKey="id" searchKey="name" placeholder="请选择用户" :multiple="true" />
+        </el-form-item>
+        <el-form-item label="职位" prop="role">
+          <el-select v-model="formUser.role" placeholder="请选择职位">
+            <el-option v-for="role in roleList" :key="role.label" :label="role.label" :value="role.label" />
+          </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -94,28 +95,67 @@ const formRef = ref(null);
 const loading = ref(false);
 const form = ref({
   name: '',
-  managerId: '',
 });
 const userDialogVisible = ref(false);
+
+const roleList = ref([
+  {
+    label: '总经理',
+    value: '总经理',
+  },
+  {
+    label: '经理',
+    value: '经理',
+  },
+  {
+    label: '主管',
+    value: '主管',
+  },
+  {
+    label: '总监',
+    value: '总监',
+  },
+  {
+    label: '专员',
+    value: '牛马',
+  },
+])
 const formUserRef = ref(null);
 const formUser = ref({
   users: '',
-  deptId: '',
+  role: '',
 });
 const userRules = {
   users: [
     { required: true, message: '请选择用户', trigger: 'change' },
+  ],
+  role: [
+    { required: true, message: '请选择职位', trigger: 'change' },
   ],
 };
 const rules = {
   name: [
     { required: true, message: '请输入部门名称', trigger: 'blur' },
   ],
-  managerId: [
-    { required: true, message: '请选择部门主管', trigger: 'change' },
-  ],
+ // managerId: [
+    //{ required: true, message: '请选择部门主管', trigger: 'change' },
+  //],
 };
+const tagType= (type) => {
+  switch (type) {
+    case '总经理':
+      return 'danger';
+    case '经理':
+      return 'success';
+    case '主管':
+      return 'warning';
+    case '总监':
+      return 'primary';
+    case '专员':
+      return 'info';
 
+  }
+}
 const handleClose = () => {
   dialogVisible.value = false;
   form.value = {
@@ -154,7 +194,7 @@ const userHandleClose = () => {
   userDialogVisible.value = false;
   formUser.value = {
     users: '',
-    deptId: '',
+    role: '',
   };
 }
 
@@ -163,6 +203,7 @@ const submitUserForm = () => {
     if (valid) {
       departmentStore.assignDepartmentUser({
         users: formUser.value.users.join(','),
+        role: formUser.value.role,
         deptId: formUser.value.deptId,
       }, userHandleClose)
     } else {
