@@ -1,6 +1,6 @@
 <template>
     <div class="history-page">
-        <TableModule :column="columns" :data="sysStore.historyList" :tableConfig="tableConfig" @refresh="refresh" >
+        <TableModule :column="columns" :data="sysStore.historyList" :tableConfig="tableConfig" @refresh="refresh">
         </TableModule>
     </div>
 </template>
@@ -20,22 +20,24 @@ const columns = [
     { props: 'place', label: '地点', align: 'center' },
     { props: 'company', label: '拜访单位', align: 'center' },
     { props: 'businessTravel', label: '关联工单', align: 'center' },
-    { props: 'startTime', label: '开始时间', align: 'center',
-        customRender: ({row}) => {
-            
-            return    <>
-                { row.startTime} - { row.startPeriod }
+    {
+        props: 'startTime', label: '开始时间', align: 'center',
+        customRender: ({ row }) => {
+
+            return <>
+                {row.startTime} - {row.startPeriod}
             </>
         }
-     },
-    { props: 'endTime', label: '结束时间', align: 'center',
+    },
+    {
+        props: 'endTime', label: '结束时间', align: 'center',
         customRender: ({ row }) => (
             <>
                 {row.endTime}-{row.endPeriod}
             </>
         )
     },
-    { props:"statusName",label: '状态', align: 'center' },
+    { props: "statusName", label: '状态', align: 'center' },
 ];
 
 const refresh = (params) => {
@@ -43,7 +45,18 @@ const refresh = (params) => {
 }
 
 const tableConfig = {
-    filterItem: [{
+    filterItem: [
+    //     {
+    //     label: "开始时间",
+    //     prop: "startTime",
+    //     type: "datePick",
+    // }, {
+    //     label: "结束时间",
+    //     prop: "endTime",
+    //     type: "datePick",
+    //     style: { width: "173px" },
+    // }, 
+    {
         label: "类型",
         prop: "searchType",
         type: "select",
@@ -56,7 +69,7 @@ const tableConfig = {
             label: "我发起的",
             value: 1,
         }]
-    },{
+    }, {
         label: "项目",
         prop: "project",
         component: <SelectLimit style="width: 173px;" url="/sys/getProjectList" dataKey="list" labelKey="name"
