@@ -10,9 +10,6 @@ export const useSysStore = defineStore("sys", {
 
        searchType:'all', // 搜索类型
        listType:'reimbursement_process', 
-
-
-
        toBeProcessedList:{
         list:[], 
         pageSize:10,
@@ -20,7 +17,15 @@ export const useSysStore = defineStore("sys", {
         totalCount:0,
         filter:{},
        }, // 待处理列表
-       
+        historyList: {
+            list: [],
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 0,
+            filter: {
+                searchType: 1,
+            },
+        }, // 待处理列表
     }),
     getters: {
     },
@@ -83,7 +88,6 @@ export const useSysStore = defineStore("sys", {
                     type:this.listType,
                     searchType:this.searchType
                 });
-                console.log(result)
                 if(result.code === 200){
                    this.submittedList = result.list;
                 }
@@ -95,7 +99,6 @@ export const useSysStore = defineStore("sys", {
         async update(params,callback) {
             try{
                 const result = await sysServices.updateItem(params);
-                console.log(result)
                 if(result.code === 200){
                     this.getTodoList()
                     ElMessage.success(result.list);
@@ -123,5 +126,20 @@ export const useSysStore = defineStore("sys", {
                 console.error("审核失败", error);
             }
         },
+
+        async getHistoryList(params = { pageNo: 1, pageSize: 10, filter: {} }) {
+            const filter = { ...this.historyList.filter, ...params.filter }
+            try{
+                const result = await sysServices.historyList({ pageNo: params.pageNo, pageSize: params.pageSize, ...filter });
+                if(result.code === 200){
+                    this.historyList ={
+                        ...result.list,
+                        filter,
+                    };
+                }
+            }catch(error){
+                console.error("获取历史记录失败", error);
+            }
+        }
     },
 });

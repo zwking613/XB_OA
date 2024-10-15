@@ -6,16 +6,14 @@
       <el-col v-for="item in formParameter.fields" :key="item.label+item.prop"
         :span="formParameter.inline ? ((24 - 3) / (formParameter.layout - 1)) : 24 / formParameter.layout">
         <el-form-item :offset="0" :label="item.label" :prop="item.prop" :label-width="formParameter.formItemLabelWidth">
-          <component  v-if="item.component && !item.check" :is="item.component" :item="item"
+          <component v-if="item.component && !item.check" :is="item.component" :item="item"
             :formParameter="formParameter" v-model="formParameter.form[item.prop]" />
           <!-- input -->
           <el-input v-if="item.type==='input'&& !item.check" :style="item.style" type="text" autocomplete="off"
-            :placeholder="`请输入${item.label}`" v-model="formParameter.form[item.prop]" @change="item.onChange"
-            >
+            :placeholder="`请输入${item.label}`" v-model="formParameter.form[item.prop]" @change="item.onChange">
 
             <template v-if="item.append" #append>
-              <el-select v-model="formParameter.form[item.append.prop]" placeholder="请选择"
-                style="width: 115px">
+              <el-select v-model="formParameter.form[item.append.prop]" placeholder="请选择" style="width: 115px">
                 <el-option v-for="i in item.append.options" :key="i.value" :label="i.label" :value="i.value" />
               </el-select>
             </template>
@@ -23,51 +21,48 @@
           </el-input>
 
           <!-- input数字输入框 -->
-          <el-input v-if="item.type==='inputNumber'&& !item.check" type="number" :style="item.style"
-            autocomplete="off" :placeholder="`请输入${item.label}`" v-model="formParameter.form[item.prop]"
-            @change="item.onChange" />
+          <el-input v-if="item.type==='inputNumber'&& !item.check" type="number" :style="item.style" autocomplete="off"
+            :placeholder="`请输入${item.label}`" v-model="formParameter.form[item.prop]" @change="item.onChange" />
           <!-- input只读框 -->
-          <el-input v-if="item.type==='inputReadOnly'&& !item.check" type="text" :style="item.style"
-            autocomplete="off" :placeholder="`请输入${item.label}`" disabled v-model="formParameter.form[item.prop]" />
+          <el-input v-if="item.type==='inputReadOnly'&& !item.check" type="text" :style="item.style" autocomplete="off"
+            :placeholder="`请输入${item.label}`" disabled v-model="formParameter.form[item.prop]" />
           <!-- 文本域 -->
-          <el-input v-if="item.type==='textarea'&& !item.check" type="textarea" :style="item.style"
-            autocomplete="off" :placeholder="`请输入${item.label}`" v-model="formParameter.form[item.prop]"
-            @change="item.onChange" />
+          <el-input v-if="item.type==='textarea'&& !item.check" type="textarea" :style="item.style" autocomplete="off"
+            :placeholder="`请输入${item.label}`" v-model="formParameter.form[item.prop]" @change="item.onChange" />
           <!-- select下拉框 -->
-          <el-select v-if="item.type==='select'&& !item.check"
+          <el-select :style="item.style" v-if="item.type==='select'&& !item.check"
             v-model="formParameter.form[item.prop]" filterable :placeholder="`请选择${item.label}`" @change="item.onChange"
-            fit-input-width :multiple="item.multiple" style="width:100%">
+            fit-input-width :multiple="item.multiple">
             <el-option v-for="i in item.options" :key="i.value" :label="i.label" :value="i.value" />
           </el-select>
           <!-- select-tree -->
-          <el-tree-select v-if="item.type==='selectTree'&& !item.check"
-            v-model="formParameter.form[item.prop]" :data="item.options" :multiple="item.multiple"
-            :render-after-expand="false" :show-checkbox="item.showCheckbox" style="width:100%" />
+          <el-tree-select v-if="item.type==='selectTree'&& !item.check" v-model="formParameter.form[item.prop]"
+            :data="item.options" :multiple="item.multiple" :render-after-expand="false"
+            :show-checkbox="item.showCheckbox" />
           <!-- switch -->
-          <el-switch v-if="item.type==='switch'&& !item.check"
-            v-model="formParameter.form[item.prop]" :disabled="item.disabled" />
+          <el-switch v-if="item.type==='switch'&& !item.check" v-model="formParameter.form[item.prop]"
+            :disabled="item.disabled" />
           <!-- radio -->
-          <el-radio-group v-if="item.type==='radio'&& !item.check"
-            v-model="formParameter.form[item.prop]" :disabled="item.disabled" @change="item.onChange">
+          <el-radio-group v-if="item.type==='radio'&& !item.check" v-model="formParameter.form[item.prop]"
+            :disabled="item.disabled" @change="item.onChange">
             <el-radio v-for="i in item.options" :label="i.label" :border="item.border"
               :key="i.label">{{i.title}}</el-radio>
           </el-radio-group>
           <!-- checkbox -->
-          <el-checkbox-group v-if="item.type==='checkbox'&& !item.check"
-            v-model="formParameter.form[item.prop]" @change="item.onChange">
+          <el-checkbox-group v-if="item.type==='checkbox'&& !item.check" v-model="formParameter.form[item.prop]"
+            @change="item.onChange">
             <el-checkbox v-for="i in item.options" :key="i.label" :label="i.label" :name="i.title"
               :disabled="item.disabled" />
           </el-checkbox-group>
           <!-- colorPicker -->
-          <el-color-picker v-if="item.type==='colorPicker'&& !item.check"
-            v-model="formParameter.form[item.prop]" @change="item.onChange" :disabled="item.disabled"
-            :show-alpha="item.showAlpha" :predefine="item.predefineColors" />
+          <el-color-picker v-if="item.type==='colorPicker'&& !item.check" v-model="formParameter.form[item.prop]"
+            @change="item.onChange" :disabled="item.disabled" :show-alpha="item.showAlpha"
+            :predefine="item.predefineColors" />
           <!-- date-->
-          <el-date-picker v-if="item.type==='datePick'&& !item.check"
-            v-model="formParameter.form[item.prop]" @change="item.onChange" :readonly="item.readonly"
-            :disabled="item.disabled" :type="item.dateType" :start-placeholder="`请选择开始${item.label}`"
-            :end-placeholder="`请选择结束${item.label}`" :placeholder="`请选择${item.label}`"
-            :format="item.format?item.format :'YYYY/MM/DD'"
+          <el-date-picker v-if="item.type==='datePick'&& !item.check" v-model="formParameter.form[item.prop]"
+            @change="item.onChange" :readonly="item.readonly" :disabled="item.disabled" :type="item.dateType"
+            :start-placeholder="`请选择开始${item.label}`" :end-placeholder="`请选择结束${item.label}`"
+            :placeholder="`请选择${item.label}`" :format="item.format?item.format :'YYYY/MM/DD'"
             :value-format="item.valueFormat ? item.valueFormat :'YYYY-MM-DD'" />
           <!-- Upload 上传 -->
           <!-- Cascader 级联选择器 -->
@@ -75,9 +70,9 @@
           <el-rate v-if="item.type==='rate'&& !item.check" v-model="formParameter.form[item.prop]"
             :disabled="item.disabled" @change="item.onChange" :allow-half="item.allowHalf" />
           <!-- Slider 滑块 -->
-          <el-slider v-if="item.type==='slider'&& !item.check"
-            v-model="formParameter.form[item.prop]" :disabled="item.disabled" @change="item.onChange"
-            :range="item.range" :marks="item.marks" :vertical="item.vertical" :show-input="item.showInput" />
+          <el-slider v-if="item.type==='slider'&& !item.check" v-model="formParameter.form[item.prop]"
+            :disabled="item.disabled" @change="item.onChange" :range="item.range" :marks="item.marks"
+            :vertical="item.vertical" :show-input="item.showInput" />
         </el-form-item>
       </el-col>
       <el-col :span=" formParameter.isSpan ? 3 : 24">
@@ -168,13 +163,14 @@ export default {
           if (element.type === "checkbox") {
             formParameter.form[element.prop] = [];
           } else {
-            formParameter.form[element.prop] = null;
+            formParameter.form[element.prop] = element.value;
             if (element.append) {
               formParameter.form[element.append.prop] = element.append.value || element.append.label;
             } 
           }
         }
       });
+      console.log(formParameter.form)
     };
     // 初始化form数据
     onBeforeMount(() => {

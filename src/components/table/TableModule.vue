@@ -52,7 +52,7 @@
 
       <!-- 操作栏 -->
       <el-table-column label="操作" :align="tableData.align" :fixed="tableData.operationFixed ? 'right' : null"
-        :width="tableOperation.length * 50 + 10">
+        :width="tableOperation.length * 50 + 10" v-if="tableOperation.length !== 0">
         <!-- 渲染按钮 -->
         <template #default="scope">
           <template v-for="(item, index) in tableOperation">
