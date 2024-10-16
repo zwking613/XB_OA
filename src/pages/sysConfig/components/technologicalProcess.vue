@@ -34,7 +34,7 @@
             </el-form-item>
             <el-form-item label="说明附件">
               <el-upload :action="upload" :limit="1" :on-remove="handleRemove" :file-list="form.attachmentId"
-                :on-success="handleSuccess" :data="{ model: 'REIMBURSEMENT' }">
+                :on-success="handleSuccess" :data="{ model: 'REIMBURSEMENT' }" :headers="headers">
                 <el-button size="small">添加附件</el-button>
               </el-upload>
             </el-form-item>
@@ -145,7 +145,7 @@
           </el-form-item>
         </el-form>
       </el-col>
-      <div class="flex justify-center mt-5 w-full">
+      <div class="flex justify-center w-full mt-5">
         <el-button style="width: 120px" @click="handleBack">取消</el-button>
         <el-button style="width: 120px" type="primary" @click="handleSave">提交</el-button>
       </div>
@@ -165,6 +165,9 @@ const sysStore = useSysStore();
 const appStore = useAppStore();
 
 const selectKey = ref(sysStore.selected.key)
+const headers= ref({
+  token: localStorage.getItem('token')
+})
 const tableData = ref([
   { index: 1, participant: '', participationCount: null, remark: '' }
 ]);
