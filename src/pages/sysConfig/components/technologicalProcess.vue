@@ -21,6 +21,7 @@
           </template>
         </el-image>
       </el-col>
+
       <el-col :span="12" class="form_list">
         <el-form ref="formRef" :model="form" :rules="rules" label-width="120px">
           <template v-if="selectKey === 'leave'">
@@ -34,7 +35,9 @@
             </el-form-item>
             <el-form-item label="说明附件">
               <el-upload :action="upload" :limit="1" :on-remove="handleRemove" :file-list="form.attachmentId"
-                :on-success="handleSuccess" :data="{ model: 'REIMBURSEMENT' }" :headers="headers">
+                :on-success="handleSuccess" :data="{ model: 'REIMBURSEMENT' }" :headers="{
+            token,
+          }">
                 <el-button size="small">添加附件</el-button>
               </el-upload>
             </el-form-item>
@@ -48,12 +51,15 @@
               </el-select>
             </el-form-item>
             <el-form-item label="附件" required prop="attachmentId">
-              <el-upload :action="upload" :limit="1000" :on-remove="handleRemove" :file-list="form.attachmentId"
-                :on-success="handleSuccess" :data="{ model: 'REIMBURSEMENT' }" :multiple="true">
+              <el-upload ref="uploadRef" :action="upload" :limit="1000" :on-remove="handleRemove" :file-list="form.attachmentId"
+                :on-success="handleSuccess" :data="{ model: 'REIMBURSEMENT' }" :multiple="true" :headers="{
+                  token
+                }">
                 <el-button size="small">上传附件</el-button>
               </el-upload>
             </el-form-item>
-            <el-form-item v-if="form.expenseType === 'IMPLEMENTATION_FEE'" label="报销金额" required prop="reimbursementAmount">
+            <el-form-item v-if="form.expenseType === 'IMPLEMENTATION_FEE'" label="报销金额" required
+              prop="reimbursementAmount">
               <el-input type="number" v-model="form.reimbursementAmount" placeholder="请输入报销金额"></el-input>
             </el-form-item>
             <el-form-item label="所属项目" v-if="form.expenseType !=='DAILY_EXPENSES'" required prop="project">
@@ -122,7 +128,9 @@
                   <SelectLimit v-if="form.expenseType !== 'IMPLEMENTATION_FEE'" v-model="scope.row.participant"
                     :url="`/sys/getReiTypeList?type=${form.expenseType}`" dataKey="list" labelKey="name" valueKey="name"
                     searchKey="name" placeholder="请选择项目" tag-type="warning" />
-                  <el-input v-else v-model="scope.row.participant" placeholder="请输入参与人"></el-input>
+                  <!-- <el-input v-else v-model="scope.row.participant" placeholder="请输入参与人"></el-input> -->
+                  <SelectLimit v-model="scope.row.participant" url="/user/page" :dataKey="['list', 'list']" labelKey="userName"
+                    valueKey="id" v-else searchKey="name" placeholder="请选择审批人" />
                 </template>
               </el-table-column>
               <el-table-column prop="participationCount"
@@ -165,9 +173,10 @@ const sysStore = useSysStore();
 const appStore = useAppStore();
 
 const selectKey = ref(sysStore.selected.key)
-const headers= ref({
-  token: localStorage.getItem('token')
-})
+// 计算请求头
+const token = ref(localStorage.getItem('token'))
+const uploadRef = ref(null)
+// 计算请求头
 const tableData = ref([
   { index: 1, participant: '', participationCount: null, remark: '' }
 ]);
@@ -274,6 +283,7 @@ const handleSuccess = async (response, file, fileList) => {
       }];
     }
   } else {
+    uploadRef.value.handleRemove(file)
     ElMessage.error(response.list);
   }
 };
@@ -371,6 +381,9 @@ const getDisabledDate = (time) => {
     ? time.getTime() >= currentDate
     : time.getTime() < currentDate;
 };
+onMounted(()=>{
+ 
+})
 </script>
 
 <style scoped>

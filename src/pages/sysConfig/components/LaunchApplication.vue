@@ -23,56 +23,6 @@
 import { useSysStore } from '@/stores/sys';
 
 const sysStore = useSysStore();
-const categories = [
-    {
-        name: '客服',
-        tags: [
-            { name: '客服中心排班', id: "project_process:4:12504" },
-            { name: '加班', id: "project_process:4:12504" },
-            { name: '客服中心外呼', id: "project_process:4:12504" },
-            { name: '开卡补卡', id: "project_process:4:12504" }
-        ]
-    },
-    {
-        name: '行政',
-        tags: [
-            { name: '中控室报修', id: 'project_process:5:12505' },
-            { name: '物资领用', id: 'project_process:6:12506' },
-            { name: '物资报废', id: 'project_process:7:12507' },
-            { name: '用印', id: 'project_process:8:12508' },
-            { name: '用车', id: 'project_process:9:12509' },
-            { name: '办公用品领用', id: 'project_process:10:12510' }
-        ]
-    },
-    {
-        name: '财务',
-        tags: [
-            { name: '报销', id: 'project_process:11:12511' },
-            { name: '预算', id: 'project_process:12:12512' },
-            { name: '付款', id: 'project_process:13:12513' },
-            { name: '门店收款', id: 'project_process:14:12514' },
-            { name: '退款', id: 'project_process:15:12515' },
-            { name: '成本凭证', id: 'project_process:16:12516' }
-        ]
-    },
-    {
-        name: '人事',
-        tags: [
-            { name: '离职', id: 'project_process:17:12517' },
-            { name: '招聘录用', id: 'project_process:18:12518' }
-        ]
-    },
-    {
-        name: '采购',
-        tags: [
-            { name: '物资采购', id: 'project_process:19:12519' },
-            { name: '入库申请', id: 'project_process:20:12520' },
-            { name: '物资调拨', id: 'project_process:21:12521' },
-            { name: '物资盘点', id: 'project_process:22:12522' },
-            { name: '采购申请', id: 'project_process:23:12523' }
-        ]
-    }
-];
 
 const getRandomColor = () => {
     let hex = '#';
