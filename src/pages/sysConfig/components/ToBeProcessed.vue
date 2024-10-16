@@ -17,15 +17,15 @@
           <span class="title">{{ type[sysStore.listType] }}</span>
           <el-tag size="small" type="success">{{
             item.businessData.statusName
-            }}</el-tag>
+          }}</el-tag>
         </div>
         <div class="info-item">
           <span class="time">{{
             item.businessData.createdAt
-            }}</span>
+          }}</span>
         </div>
         <div class="info-item">
-          <span class="label">{{type[sysStore.listType]}}类型：</span>
+          <span class="label">{{ type[sysStore.listType] }}类型：</span>
           <span class="value">{{ item.businessData.typeName }}</span>
         </div>
         <div class="info-item">
@@ -43,14 +43,20 @@
 
         <el-descriptions v-if="sysStore.listType === 'reimbursement_process'" title="报销详情" :column="2" border
           label-align="center" align="center">
+          <el-descriptions-item label-align="center" align="center" label="发起人">{{
+            copyInfo.businessData.submitUserName
+            }}</el-descriptions-item>
+          <el-descriptions-item label-align="center" align="center" label="发起时间">{{
+            copyInfo.businessData.submitDate
+            }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="费用类型">{{
             copyInfo.businessData.typeName
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="报销金额">{{
             copyInfo.businessData.reimbursementAmount
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="地点">
-            {{ copyInfo.businessData.place}}
+            {{ copyInfo.businessData.place }}
           </el-descriptions-item>
 
           <el-descriptions-item label-align="center" align="center" label="所属项目">
@@ -70,7 +76,7 @@
           </el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="部门">{{
             copyInfo.businessData.departmentName
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="附件">
             <div v-for="item in copyInfo.businessData.fileList" :key="item.fileId">
               <el-link type="success" :href="`${download}?fileId=${item.fileId
@@ -99,13 +105,13 @@
           label-align="center" align="center">
           <el-descriptions-item label-align="center" align="center" label="申请类型">{{
             copyInfo.name
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="部门">{{
             copyInfo.businessData.departmentName
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="请假类型">{{
             copyInfo.businessData.leaveType
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="开始时间">
             {{ copyInfo.businessData.startTime.split(" ")[0] }}
             {{ copyInfo.businessData.startPeriod }}
@@ -116,16 +122,16 @@
           </el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="请假原因">{{
             copyInfo.businessData.reason
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="审批人">{{
             copyInfo.businessData.approverName
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="抄送人">{{
             copyInfo.businessData.ccPersonName
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="发起人">{{
             copyInfo.businessData.initiatorName
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="附件">
             <el-link v-if="copyInfo.businessData.attachmentId"
               @click="handleDownload(copyInfo.businessData.attachmentId)" type="primary" target="_blank">下载查看
@@ -133,9 +139,9 @@
             <span v-else>无</span>
           </el-descriptions-item>
         </el-descriptions>
-        <el-image :src="`/api/flowable/getTaskProcessDiagram?taskId=${copyInfo.id}`" alt="流程图"
-          fit="contain" style="width: 100%; height: 100%" :zoom-rate="1.2" :initial-index="0" :min-scale="0.2"
-          :max-scale="5" :preview-src-list="[`/api/flowable/getTaskProcessDiagram?taskId=${copyInfo.id}`]">
+        <el-image :src="`/api/flowable/getTaskProcessDiagram?taskId=${copyInfo.id}`" alt="流程图" fit="contain"
+          style="width: 100%; height: 100%" :zoom-rate="1.2" :initial-index="0" :min-scale="0.2" :max-scale="5"
+          :preview-src-list="[`/api/flowable/getTaskProcessDiagram?taskId=${copyInfo.id}`]">
           <template #error>
             <div class="image-slot">
               <span>加载失败</span>
@@ -215,28 +221,28 @@ const addRow = () => {
 };
 
 const deleteRow = () => {
-  if(tableData.value.length > 1){
+  if (tableData.value.length > 1) {
     tableData.value.pop();
   } else {
     ElMessage.error('最少保留一行');
   }
 };
-const type={
-  reimbursement_process:"报销",
+const type = {
+  reimbursement_process: "报销",
 }
 const handleCopyMe = (item) => {
   copyInfo.value = item;
   dialogVisible.value = true;
   // sysStore.getProgressUrl(item.id,()=>{
-   
+
   // });
-  
+
 };
 
 
 const edit = (item, info) => {
 
-  tableData.value = [item].map((item, index)=>{
+  tableData.value = [item].map((item, index) => {
     return {
       index: index + 1,
       id: item.id,
@@ -248,16 +254,16 @@ const edit = (item, info) => {
   orderInfo.value = info;
   editDialogVisible.value = true;
 };
-const submit = ()=>{
+const submit = () => {
   const tableDataJson = tableData.value.map(item => ({
     [orderInfo.value.type === '差旅费' ? 'type' : 'participants']: item.participant,
     [orderInfo.value.type === '差旅费' ? 'cost' : 'days']: item.participationCount,
     id: item.id,
     remark: item.remark,
   }));
-  sysStore.update(tableDataJson[0], ()=>{
-     editDialogVisible.value = false;
-     dialogVisible.value = false;
+  sysStore.update(tableDataJson[0], () => {
+    editDialogVisible.value = false;
+    dialogVisible.value = false;
   });
 }
 
@@ -265,8 +271,8 @@ const submit = ()=>{
 
 
 const audit = (item, type) => {
-  sysStore.audit({ taskId: item.id}, () => {
-    dialogVisible.value = false;  
+  sysStore.audit({ taskId: item.id }, () => {
+    dialogVisible.value = false;
   })
 }
 
@@ -296,11 +302,11 @@ const listTypeChange = (val) => {
   sysStore.listType = val;
 }
 
-watch([()=> sysStore.searchType,()=>sysStore.searchValue],()=>{
+watch([() => sysStore.searchType, () => sysStore.searchValue], () => {
   sysStore.getTodoList()
 })
 
-onMounted(async () => {});
+onMounted(async () => { });
 </script>
 
 <style scoped lang="less">
@@ -312,6 +318,7 @@ onMounted(async () => {});
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
+
 .detail-content {
   height: 640px;
   overflow-y: auto;
@@ -334,12 +341,14 @@ onMounted(async () => {});
   font-size: 14px;
   color: #606266;
 }
+
 .title {
   font-size: 16px;
   font-weight: bold;
   margin-right: 10px;
   color: #606266;
 }
+
 .time {
   font-size: 14px;
   color: #909399;
@@ -374,42 +383,3 @@ onMounted(async () => {});
   scrollbar-color: #888 #f1f1f1;
 }
 </style>
-
-
-<!-- 
-<template>
-
-  <el-descriptions title="Vertical list with border" direction="vertical" :column="4" :size="size" border>
-    <el-descriptions-item label="Username">kooriookami</el-descriptions-item>
-    <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
-    <el-descriptions-item label="Place" :span="2">Suzhou</el-descriptions-item>
-    <el-descriptions-item label="Remarks">
-      <el-tag size="small">School</el-tag>
-    </el-descriptions-item>
-    <el-descriptions-item label="Address">No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province
-    </el-descriptions-item>
-  </el-descriptions>
-
-</template>
-
-<script setup lang="ts">
-import { computed, ref } from 'vue'
-
-const size = ref('')
-const blockMargin = computed(() => {
-  const marginMap = {
-    large: '32px',
-    default: '28px',
-    small: '24px',
-  }
-  return {
-    marginTop: marginMap[size.value] || marginMap.default,
-  }
-})
-</script>
-
-<style scoped>
-.el-descriptions {
-  margin-top: 20px;
-}
-</style> -->
