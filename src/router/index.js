@@ -6,8 +6,8 @@ export const routes = [
         path: '/costStatistics',
         component: () => import('@/pages/costStatistics/index.vue'),
         meta: {
-            icon: 'HomeFilled'
-        }
+            icon: 'ChartLine'
+        } 
     },
     {
         name: '文件管理',

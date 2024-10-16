@@ -1,6 +1,6 @@
 <template>
     <div id="costStatistics">
-            <div id="main"></div>
+        <div id="main"></div>
     </div>
 </template>
 <script setup name="costStatistics">

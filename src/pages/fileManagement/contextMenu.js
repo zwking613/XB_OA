@@ -21,16 +21,16 @@ export const allMenu = [
     },
     {
         label: '删除',
-        action: 'delete',
+        action: 'recycle',
     },
     {
         label: '重命名',
         action: 'rename'
     },
-    {
-        label: '回收站',
-        action: 'recycle'
-    },
+    // {
+    //     label: '回收站',
+    //     action: 'recycle'
+    // },
 
     {
         label: '分享',

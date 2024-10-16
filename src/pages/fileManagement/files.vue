@@ -449,7 +449,20 @@ const handleContextMenuAction = (action) => {
       renameFile.oldName = contextMenu.file.fileName;
       break;
     case "recycle":
-      fileStore.moveFileToRecycleBin(contextMenu.file.fileId, type);
+      ElMessageBox.confirm(
+        '删除文件，将进入回收站，请谨慎操作！',
+        {
+          confirmButtonText: '删除',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          fileStore.moveFileToRecycleBin(contextMenu.file.fileId, type);
+        })
+        .catch(() => {
+         
+        })
       break;
     case "share":
       if (!userApp.userInfo.manager) {
