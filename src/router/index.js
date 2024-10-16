@@ -1,12 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-
 export const routes = [
     {
         name: '费用统计',
         path: '/costStatistics',
         component: () => import('@/pages/costStatistics/index.vue'),
         meta: {
-            icon: 'ChartLine'
+            icon: 'ALStatistics'
         } 
     },
     {
@@ -27,12 +26,12 @@ export const routes = [
                 path: 'filesAudit',
                 component: () => import('@/pages/fileManagement/filesAudit.vue'),
                 meta: {
-                    icon: 'Document'
+                    icon: 'ALFileAudit'
                 }
             }
         ],
         meta: {
-          icon: 'Document'
+            icon: 'ALFile'
         }
     },
     {
@@ -45,7 +44,7 @@ export const routes = [
                 path: 'user',
                 component: () => import('@/pages/userManagement/user.vue'),
                 meta: {
-                    icon: 'User'
+                    icon: 'ALUser'
                 }
             }
         ],
@@ -63,7 +62,7 @@ export const routes = [
                 path: 'department',
                 component: () => import('@/pages/departmentManagement/department.vue'),
                 meta: {
-                    icon: 'Folder'
+                    icon: 'ALDepartment'
                 }
             }
         ],
@@ -81,7 +80,7 @@ export const routes = [
                 path: 'sys',
                 component: () => import('@/pages/sysConfig/sys.vue'),
                 meta: {
-                    icon: 'Setting'
+                    icon: 'ALFlowSetting'
                 }
             },
             {
@@ -89,7 +88,7 @@ export const routes = [
                 path: 'model',
                 component: () => import('@/pages/sysConfig/model.vue'),
                 meta: {
-                    icon: 'Setting'
+                    icon: 'ALFlowModel'
                 }
             },
             {
@@ -97,25 +96,9 @@ export const routes = [
                 path: 'config',
                 component: () => import('@/pages/sysConfig/config.vue'),
                 meta: {
-                    icon: 'Setting'
+                    icon: 'ALSetting'
                 }
             }
-            // {
-            //     name: '审核配置',
-            //     path: 'approvalConfig',
-            //     component: () => import('@/pages/sysConfig/approvalConfig.vue'),
-            //     meta: {
-            //         icon: 'Setting'
-            //     }
-            // },
-            // {
-            //     name: '项目配置',
-            //     path: 'projectConfig',
-            //     component: () => import('@/pages/sysConfig/projectConfig.vue'),
-            //     meta: {
-            //         icon: 'Setting'
-            //     }
-            // }
         ],
         meta: {
             icon: 'Setting'
@@ -126,7 +109,7 @@ export const routes = [
         path: '/pps/',
         component: () => import('@/pages/pps/index.vue'),
         meta: {
-            icon: 'Setting'
+            icon: 'ALForwarding'
         }
     }
 ]

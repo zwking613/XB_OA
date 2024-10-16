@@ -3,6 +3,7 @@ import App from '@/App.vue'
 import router from '@/router/index'
 import { createPinia } from "pinia";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import ALIcon from '@/assets/iconSVG/index.js'
 import ElementPlus from 'element-plus';
 import 'dayjs/locale/zh-cn';
 import locale from 'element-plus/es/locale/lang/zh-cn';
@@ -13,6 +14,10 @@ import SelectLimit from '@/components/form/SelectLimit.vue';
 import SelectTree from '@/components/form/SelectTree.vue';
 import './style.css'
 import 'element-plus/dist/index.css';
+
+console.log(ALIcon)
+console.log(ElementPlusIconsVue)
+
 const app = createApp(App)
 // 全局注册Table组件
 app.component('TableModule', TableModule)
@@ -24,7 +29,12 @@ app.component('FormModule', FormModule)
 app.component('SelectLimit', SelectLimit)
 app.component('SelectTree', SelectTree)
 
+// 全局注册element-plus图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+}
+// 全局注册svg图标
+for (const [key, component] of Object.entries(ALIcon)) {
     app.component(key, component)
 }
 
