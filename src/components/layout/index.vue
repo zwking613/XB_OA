@@ -6,7 +6,7 @@
         <Menu />
       </el-aside>
       <el-container >
-        <el-main class="h-full">
+        <el-main class="h-full box-border">
           <el-card class="h-[calc(100vh-110px)] el-main">
             <RouterView></RouterView>
           </el-card>

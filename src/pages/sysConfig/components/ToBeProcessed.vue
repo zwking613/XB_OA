@@ -155,6 +155,7 @@
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button type="danger" @click="audit(copyInfo, 'REJECT')">驳回</el-button>
             <el-button type="success" @click="audit(copyInfo, 'PASS')">通过</el-button>
           </div>
         </template>
@@ -236,9 +237,6 @@ const type = {
 const handleCopyMe = (item) => {
   copyInfo.value = item;
   dialogVisible.value = true;
-  // sysStore.getProgressUrl(item.id,()=>{
-
-  // });
 
 };
 
@@ -273,9 +271,19 @@ const submit = () => {
 
 
 const audit = (item, type) => {
-  sysStore.audit({ taskId: item.id }, () => {
+  try {
+    if (type === 'PASS') {
+      sysStore.audit({ taskId: item.id })
+    } else {
+      sysStore.reject({ taskId: item.id })
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
     dialogVisible.value = false;
-  })
+  }
+  
+  
 }
 
 

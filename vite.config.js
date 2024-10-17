@@ -31,10 +31,10 @@ export default defineConfig({
     proxy: {
       '/api': {
         // target: 'http://120.79.136.163:8501',
-        // target: 'http://192.168.3.129:8088/',
-        target: 'http://192.168.3.251:8809/',
+        target: 'http://192.168.3.129:8088/',
+        // target: 'http://192.168.3.251:8809/',
         changeOrigin: true,
-        // rewrite: (path) => path.replace(/^\/api/, ''),
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
     }
   },

@@ -50,7 +50,8 @@ export const todoList = (params) => post('/flowable/getInstantiateList',params);
 export const updateItem = (params) => post('/reimbursement/updateItem',params);
 
 
-export const audit = (params) => post('/flowable/audit',params);
+export const audit = (params) => post('/flowable/audit', params);
+export const reject = (params) => post('/flowable/deleteProcess', params);
 
 export const historyList = (params) => post('/reimbursement/page',params);
 

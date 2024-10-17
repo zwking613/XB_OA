@@ -1,27 +1,32 @@
 <template>
   <div class="w-full">
-    <el-header class="bg-[#00C0EF] color-[#ffff] flex items-center justify-between w-full">
-      <div class="flex items-center">
+    <el-header class="bg-[#34495E] color-[#ffff] flex items-center justify-between w-full">
+      <div class="flex items-center w-[300px]">
         <div class="flex items-center h-full text-xl font-bold">
-          <img src="/src/assets/logo.png" alt="logo" class="h-8 mr-2 w-30" />
+          <img src="/src/assets/logo.png" alt="logo" class="mr-2 h-8 w-30" />
         </div>
-      </div>  
-      <el-dropdown>
-        <span class="flex items-center cursor-pointer el-dropdown-link">
-          <el-avatar :size="32" :src="userAvatar"></el-avatar>
-          <span class="ml-2">{{ userStore.userInfo.userName }}</span>
-          <el-icon class="el-icon--right">
-            <ArrowDown />
-          </el-icon>
-        </span>
-        <template #dropdown>
-          <el-dropdown-menu class="w-[150px]">
-            <el-dropdown-item divided @click="handleChangePassword">修改密码</el-dropdown-item>
-            <el-dropdown-item divided @click="handleResetPassword">重置密码</el-dropdown-item>
-            <el-dropdown-item divided @click="handleLogout">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      </div>
+      <div class="grow">
+        <!-- 123 -->
+      </div>
+      <div class="w-[100px]">
+        <el-dropdown>
+          <span class="flex items-center cursor-pointer el-dropdown-link">
+            <el-avatar :size="32" :src="userAvatar"></el-avatar>
+            <span class="ml-2">{{ userStore.userInfo.userName }}</span>
+            <el-icon class="el-icon--right">
+              <ArrowDown />
+            </el-icon>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu class="w-[150px]">
+              <el-dropdown-item divided @click="handleChangePassword">修改密码</el-dropdown-item>
+              <el-dropdown-item divided @click="handleResetPassword">重置密码</el-dropdown-item>
+              <el-dropdown-item divided @click="handleLogout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </el-header>
     <!-- 重置密码确认弹窗 -->
     <el-dialog v-model="resetDialogVisible" title="重置密码" width="30%" :close-on-click-modal="false"

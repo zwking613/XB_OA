@@ -15,9 +15,6 @@ import SelectTree from '@/components/form/SelectTree.vue';
 import './style.css'
 import 'element-plus/dist/index.css';
 
-console.log(ALIcon)
-console.log(ElementPlusIconsVue)
-
 const app = createApp(App)
 // 全局注册Table组件
 app.component('TableModule', TableModule)

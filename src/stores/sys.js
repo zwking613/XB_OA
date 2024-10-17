@@ -110,20 +110,27 @@ export const useSysStore = defineStore("sys", {
                 console.error("更新失败", error);
             }
         },
-        async audit(params, callback) {
-            try {
+        async audit(params) {
                 const result = await sysServices.audit(params);
                 if (result.code === 200) {
                     this.getTodoList()
                     ElMessage.success(result.list);
-                    callback && callback();
                 }
                 else {
                     ElMessage.error(result.list);
                 }
-            } catch (error) {
-                console.error("审核失败", error);
+           
+        },
+        async reject(params) {
+            const result = await sysServices.reject(params);
+            if (result.code === 200) {
+                this.getTodoList()
+                ElMessage.success(result.list);
             }
+            else {
+                ElMessage.error(result.list);
+            }
+
         },
 
         async getHistoryList(params = { pageNo: 1, pageSize: 10, filter: {} }) {

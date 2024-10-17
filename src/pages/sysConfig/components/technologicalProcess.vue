@@ -314,11 +314,10 @@ const handleSave = () => {
 
 const prepareReimbursementData = () => {
   const tableDataJson = tableData.value.map(item => ({
-    [form.value.expenseType === '差旅费' ? 'type' : 'participants']: item.participant,
-    [form.value.expenseType === '差旅费' ? 'cost' : 'days']: item.participationCount,
+    [form.value.expenseType !== '实施费' ? 'type' : 'participants']: item.participant,
+    [form.value.expenseType !== '实施费' ? 'cost' : 'days']: item.participationCount,
     remark: item.remark,
   }));
-
   return {
     dateJson: JSON.stringify({
       startTime: form.value.startTime,
