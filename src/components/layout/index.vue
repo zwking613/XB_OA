@@ -2,11 +2,11 @@
   <div class="common-layout">
     <Header></Header>
     <el-container class="h-[calc(100vh-64px)]">
-      <el-aside class="w-[16.25rem]">
+      <el-aside class="w-[16.25rem]" v-if="userStore.menuMode !== 'horizontal'">
         <Menu />
       </el-aside>
       <el-container >
-        <el-main class="h-full box-border">
+        <el-main class="box-border h-full">
           <el-card class="h-[calc(100vh-110px)] el-main">
             <RouterView></RouterView>
           </el-card>
@@ -19,6 +19,8 @@
 <script setup name="Layout">
 import Menu from "@/components/layout/Menu.vue";
 import Header from "@/components/layout/Header.vue";
+import { useAppStore } from '@/stores/app'
+const userStore = useAppStore()
 </script>
 <style scoped>
 .el-main::-webkit-scrollbar {

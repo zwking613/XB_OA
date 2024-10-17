@@ -4,6 +4,7 @@ import * as appService from '@/services/app'
 export const useAppStore = defineStore('app', {
   state: () => ({
     userInfo:{}, // 用户信息
+    menuMode:'vertical' // vertical horizontal
   }),
   getters: {
     getUserName: (state) => {

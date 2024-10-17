@@ -1,18 +1,19 @@
 <template>
   <div class="w-full">
-    <el-header class="bg-[#34495E] text-[#ffff] flex items-center justify-between w-full">
+    <el-header :class="[userStore.menuMode === 'vertical' ? 'bg-[#34495E]' : 'bg-[#232E33]',' text-[#ffff]', 'flex','items-center', 'justify-between' ,'w-full']">
       <div class="flex items-center w-[300px]">
         <div class="flex items-center h-full text-xl font-bold">
           <img src="/src/assets/logo.png" alt="logo" class="h-8 mr-2 w-30" />
         </div>
       </div>
-      <div class="grow">
-        <!-- 123 -->
-      </div>
+      <div class="grow" v-if="userStore.menuMode === 'horizontal'">
+       <Menu/>
+      </div>  
       <div class="w-[100px] ">
         <el-dropdown>
           <span class="flex items-center cursor-pointer el-dropdown-link">
-            <el-avatar :size="32" :src="userAvatar"></el-avatar>
+            <el-avatar class="bg-[#ee2446]" :size="32">{{
+   userStore.userInfo.userName&&userStore.userInfo.userName.substring(0, 1)}}</el-avatar>
             <span class="ml-2 text-[#ffff]">{{ userStore.userInfo.userName }}</span>
             <el-icon class="el-icon--right">
               <ArrowDown />
@@ -66,6 +67,7 @@
 import { ref } from 'vue'
 import { ArrowDown } from '@element-plus/icons-vue'
 import { useAppStore } from '@/stores/app'
+import Menu from "@/components/layout/Menu.vue";
 const userStore = useAppStore()
 const userAvatar = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png')
 const dialogVisible = ref(false)

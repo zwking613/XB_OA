@@ -1,6 +1,6 @@
 <template>
-  <el-menu :unique-opened="true" :default-active="defaultActive" class="h-[calc(100vh-64px)] el-menu-vertical-demo dark-mode" :router="true"
-    background-color="rgb(35 46 51)" text-color="#fff" :collapse="isCollapse" active-text-color="#fff">
+  <el-menu :unique-opened="true" :mode="userStore.menuMode" :default-active="defaultActive" class="h-[calc(100vh-64px)] el-menu-vertical-demo dark-mode" :router="true"
+    background-color="#232E33" text-color="#fff" :collapse="isCollapse" active-text-color="#fff">
     <template v-for="route in routes">
       <el-sub-menu :key="route.name" v-if="route.children && route.children.length" :index="route.path">
         <template #title>
@@ -30,9 +30,10 @@
 import { useRouter } from "vue-router";
 import { routes } from "@/router";
 import { ref } from "vue";
+import { useAppStore } from '@/stores/app'
 const isCollapse = ref(false);
 const router = useRouter();
-console.log(router.currentRoute.value.path)
+const userStore = useAppStore()
 const defaultActive = ref(router.currentRoute.value.path);
 </script>
 
