@@ -7,12 +7,6 @@
           <div v-for="(item, index) in companyValues" :key="index" class="info-item">
             <h2>{{ item.title }}</h2>
             <p>{{ item.content }}</p>
-            <!-- <div v-if="item.child" class="child-values">
-              <div v-for="(childItem, childIndex) in item.child" :key="childIndex" class="child-item">
-                <h3>{{ childItem.title }}</h3>
-                <p>{{ childItem.content }}</p>
-              </div>
-            </div> -->
           </div>
         </div>
       </div>
@@ -235,7 +229,7 @@ const handleLogin =  () => {
   }
 }
 
-@media (max-width: 750px) {
+@media (max-width: 1024px) {
   .login-content {
     flex-direction: column;
   }

@@ -1,19 +1,19 @@
 <template>
   <div class="w-full">
-    <el-header class="bg-[#34495E] color-[#ffff] flex items-center justify-between w-full">
+    <el-header class="bg-[#34495E] text-[#ffff] flex items-center justify-between w-full">
       <div class="flex items-center w-[300px]">
         <div class="flex items-center h-full text-xl font-bold">
-          <img src="/src/assets/logo.png" alt="logo" class="mr-2 h-8 w-30" />
+          <img src="/src/assets/logo.png" alt="logo" class="h-8 mr-2 w-30" />
         </div>
       </div>
       <div class="grow">
         <!-- 123 -->
       </div>
-      <div class="w-[100px]">
+      <div class="w-[100px] ">
         <el-dropdown>
           <span class="flex items-center cursor-pointer el-dropdown-link">
             <el-avatar :size="32" :src="userAvatar"></el-avatar>
-            <span class="ml-2">{{ userStore.userInfo.userName }}</span>
+            <span class="ml-2 text-[#ffff]">{{ userStore.userInfo.userName }}</span>
             <el-icon class="el-icon--right">
               <ArrowDown />
             </el-icon>
