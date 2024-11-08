@@ -17,12 +17,12 @@
           <span class="title">{{ type[sysStore.listType] }}</span>
           <el-tag size="small" type="success">{{
             item.businessData.statusName
-            }}</el-tag>
+          }}</el-tag>
         </div>
         <div class="info-item">
           <span class="time">{{
             item.businessData.createdAt
-            }}</span>
+          }}</span>
         </div>
         <div class="info-item">
           <span class="label">发起人：</span>
@@ -53,11 +53,11 @@
           label-align="center" align="center">
           <el-descriptions-item label-align="center" align="center" label="费用类型">{{
             copyInfo.businessData.typeName
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="报销金额">
-            {{copyInfo.businessData.reimbursementAmount}} 元
+            {{ copyInfo.businessData.reimbursementAmount }} 元
             <span style="font-size: 12px;margin-left: 10px;"
-              v-if="copyInfo.businessData.type!== 'IMPLEMENTATION_FEE'">实际报销:{{ copyInfo.businessData.actualAmount
+              v-if="copyInfo.businessData.type !== 'IMPLEMENTATION_FEE'">实际报销:{{ copyInfo.businessData.actualAmount
               }}元</span>
           </el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="地点">
@@ -80,7 +80,7 @@
           </el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="部门">{{
             copyInfo.businessData.departmentName
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="附件">
             <div v-for="item in copyInfo.businessData.fileList" :key="item.fileId">
               <el-link type="success" :href="`${download}?fileId=${item.fileId
@@ -89,19 +89,25 @@
           </el-descriptions-item>
           <el-descriptions-item label="费用明细" :span="2">
             <el-table :data="copyInfo.businessData.details" border style="width: 100%;">
-              <el-table-column :prop="copyInfo.businessData.type === 'IMPLEMENTATION_FEE' ? 'participants' : 'type'"
-                :label="copyInfo.businessData.type === 'IMPLEMENTATION_FEE' ? '参与人' : '项目名称'" width="180">
+              <el-table-column prop="participantsName" label="参与用户" v-if="copyInfo.businessData.type !== 'IMPLEMENTATION_FEE'"
+                >
+              </el-table-column>
+              <el-table-column prop="project" label="所属项目" v-if="copyInfo.businessData.type !== 'IMPLEMENTATION_FEE'"
+                >
+              </el-table-column>
+              <el-table-column prop="dept" v-if="copyInfo.businessData.type !== 'IMPLEMENTATION_FEE'" label="所属部门"> </el-table-column>
+              <el-table-column :prop="copyInfo.businessData.type === 'IMPLEMENTATION_FEE' ? 'participants' : 'type'" :label="copyInfo.businessData.type === 'IMPLEMENTATION_FEE' ? '参与人' : '项目名称'" >
               </el-table-column>
               <el-table-column :prop="copyInfo.businessData.type === 'IMPLEMENTATION_FEE' ? 'days' : 'cost'"
                 :label="copyInfo.businessData.type === 'IMPLEMENTATION_FEE' ? '参与天数' : '费用占比(元)'"
-                width="180"></el-table-column>
+                ></el-table-column>
               <el-table-column prop="remark" label="备注"></el-table-column>
-              <el-table-column label="修改" v-if="copyInfo.businessData.status === 'ACCOUNTING'">
+              <!-- <el-table-column label="修改" v-if="copyInfo.businessData.status === 'ACCOUNTING'">
                 <template #default="scope">
                   <el-button link size="small" type="warning"
                     @click="edit(scope.row, copyInfo.businessData)">编辑</el-button>
                 </template>
-              </el-table-column>
+</el-table-column> -->
             </el-table>
           </el-descriptions-item>
         </el-descriptions>
@@ -109,13 +115,13 @@
           label-align="center" align="center">
           <el-descriptions-item label-align="center" align="center" label="申请类型">{{
             copyInfo.name
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="部门">{{
             copyInfo.businessData.departmentName
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="请假类型">{{
             copyInfo.businessData.leaveType
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="开始时间">
             {{ copyInfo.businessData.startTime.split(" ")[0] }}
             {{ copyInfo.businessData.startPeriod }}
@@ -126,16 +132,16 @@
           </el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="请假原因">{{
             copyInfo.businessData.reason
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="审批人">{{
             copyInfo.businessData.approverName
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="抄送人">{{
             copyInfo.businessData.ccPersonName
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="发起人">{{
             copyInfo.businessData.initiatorName
-            }}</el-descriptions-item>
+          }}</el-descriptions-item>
           <el-descriptions-item label-align="center" align="center" label="附件">
             <el-link v-if="copyInfo.businessData.attachmentId"
               @click="handleDownload(copyInfo.businessData.attachmentId)" type="primary" target="_blank">下载查看
@@ -167,7 +173,7 @@
             <el-table :data="tableData" border style="width: 100%;">
               <el-table-column prop="index" label="序号" width="80"></el-table-column>
               <el-table-column prop="participant" :label="orderInfo.type === 'IMPLEMENTATION_FEE' ? '参与人' : '项目名称'"
-                width="180">
+               >
                 <template #default="scope">
                   <SelectLimit v-if="orderInfo.type !== 'IMPLEMENTATION_FEE'" v-model="scope.row.participant"
                     :url="`/sys/getReiTypeList?type=${orderInfo.type}`" dataKey="list" labelKey="name" valueKey="name"
@@ -176,7 +182,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="participationCount"
-                :label="orderInfo.type === 'IMPLEMENTATION_FEE' ? '参与天数' : '费用占比(元)'" width="180">
+                :label="orderInfo.type === 'IMPLEMENTATION_FEE' ? '参与天数' : '费用占比(元)'">
                 <template #default="scope">
                   <el-input-number v-model="scope.row.participationCount" :min="0" :step="0.5" :max="999"
                     :placeholder="orderInfo.type === 'IMPLEMENTATION_FEE' ? '请输入参与天数' : '请输入费用占比(元)'"></el-input-number>
@@ -282,8 +288,8 @@ const audit = (item, type) => {
   } finally {
     dialogVisible.value = false;
   }
-  
-  
+
+
 }
 
 

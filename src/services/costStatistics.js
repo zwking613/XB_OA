@@ -15,3 +15,7 @@ export const projectStatistics = (params) => post('/projectCostStatistics/countB
  * @returns 
  */
 export const userStatistics = (params) => post('/projectCostStatistics/countByUser', params)
+
+
+
+export const getProjectData = (params) => post('/projectCostStatistics/group', params)

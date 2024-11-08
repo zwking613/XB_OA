@@ -12,15 +12,6 @@
     <el-tab-pane label="历史" name="history">
       <History />
     </el-tab-pane>
-    <!-- <el-tab-pane label="已处理" name="third">
-      <Processed />
-    </el-tab-pane>
-    <el-tab-pane label="抄送我的" name="fourth">
-      <CopyMe />
-    </el-tab-pane>
-    <el-tab-pane label="已提交" name="five">
-      <Submitted />
-    </el-tab-pane> -->
   </el-tabs>
 
 </template>

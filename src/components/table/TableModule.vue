@@ -247,6 +247,7 @@ export default {
       filterItem.layout = tableData.filterItem.length + 1;
       tableData.column = props.column
       tableData.data = props.data
+
     };
 
     // 编辑参数

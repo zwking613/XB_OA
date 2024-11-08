@@ -33,14 +33,14 @@
             <el-form-item label="请假事由" required prop="reason">
               <el-input type="textarea" v-model="form.reason" placeholder="请输入"></el-input>
             </el-form-item>
-            <el-form-item label="说明附件">
+            <!-- <el-form-item label="说明附件">
               <el-upload :action="upload" :limit="1" :on-remove="handleRemove" :file-list="form.attachmentId"
                 :on-success="handleSuccess" :data="{ model: 'REIMBURSEMENT' }" :headers="{
             token,
           }">
                 <el-button size="small">添加附件</el-button>
               </el-upload>
-            </el-form-item>
+            </el-form-item> -->
           </template>
 
           <template v-if="selectKey === 'reimbursement_process'">
@@ -50,14 +50,14 @@
                   :value="type.value"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="附件" required prop="attachmentId">
+            <!-- <el-form-item label="附件" required prop="attachmentId">
               <el-upload ref="uploadRef" :action="upload" :limit="1000" :on-remove="handleRemove" :file-list="form.attachmentId"
                 :on-success="handleSuccess" :data="{ model: 'REIMBURSEMENT' }" :multiple="true" :headers="{
                   token
                 }">
                 <el-button size="small">上传附件</el-button>
               </el-upload>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item v-if="form.expenseType === 'IMPLEMENTATION_FEE'" label="报销金额" required
               prop="reimbursementAmount">
               <el-input type="number" v-model="form.reimbursementAmount" placeholder="请输入报销金额"></el-input>
@@ -122,25 +122,46 @@
           <el-form-item label="费用明细" v-if="selectKey === 'reimbursement_process'">
             <el-table :data="tableData" border height="200px" style="width: 100%;">
               <el-table-column prop="index" label="序号" width="80"></el-table-column>
-              <el-table-column prop="participant" :label="form.expenseType === 'IMPLEMENTATION_FEE' ? '参与人' : '项目名称'"
+              <el-table-column prop="users" label="参与用户" v-if="form.expenseType !== 'IMPLEMENTATION_FEE'" width="180">
+                 <template #default="scope">
+                  <SelectLimit v-model="scope.row.users"
+                    url="/user/page" :dataKey="['list', 'list']"  labelKey="userName" valueKey="id"
+                    searchKey="name" placeholder="请选择参与用户" tag-type="warning" />
+                </template>
+              </el-table-column>
+              <el-table-column prop="project" label="所属项目" v-if="form.expenseType !== 'IMPLEMENTATION_FEE'" width="180">
+                 <template #default="scope">
+                  <SelectLimit v-model="scope.row.project"
+                  url="/sys/getProjectList" dataKey="list" labelKey="name"
+                valueKey="name" searchKey="name" placeholder="请选择所属项目" tag-type="warning" />
+                </template>
+              </el-table-column>
+              <el-table-column prop="dept" v-if="form.expenseType !== 'IMPLEMENTATION_FEE'" label="所属部门" width="180">
+                <template #default="scope">
+                    <SelectLimit v-model="scope.row.dept"
+                    url="/department/list" dataKey="list" labelKey="name" valueKey="name" placeholder="请选择所属部门" tag-type="warning" />
+                </template>
+              </el-table-column>
+
+              
+              <el-table-column prop="participant" :label="form.expenseType === 'IMPLEMENTATION_FEE' ? '参与人' : '类型'"
                 width="180">
                 <template #default="scope">
                   <SelectLimit v-if="form.expenseType !== 'IMPLEMENTATION_FEE'" v-model="scope.row.participant"
                     :url="`/sys/getReiTypeList?type=${form.expenseType}`" dataKey="list" labelKey="name" valueKey="name"
                     searchKey="name" placeholder="请选择项目" tag-type="warning" />
-                  <!-- <el-input v-else v-model="scope.row.participant" placeholder="请输入参与人"></el-input> -->
                   <SelectLimit v-model="scope.row.participant" url="/user/page" :dataKey="['list', 'list']" labelKey="userName"
-                    valueKey="id" v-else searchKey="name" placeholder="请选择审批人" />
+                    valueKey="id" v-else searchKey="name" placeholder="请选择参与人" />
                 </template>
               </el-table-column>
               <el-table-column prop="participationCount"
-                :label="form.expenseType === 'IMPLEMENTATION_FEE' ? '参与天数' : '费用占比(元)'" width="180">
+                :label="form.expenseType === 'IMPLEMENTATION_FEE' ? '参与天数' : '费用(元)'" width="180">
                 <template #default="scope">
                   <el-input-number v-model="scope.row.participationCount" :min="0" :step="0.5" :max="999"
-                    :placeholder="form.expenseType === 'IMPLEMENTATION_FEE' ? '请输入参与天数' : '请输入费用占比(元)'"></el-input-number>
+                    :placeholder="form.expenseType === 'IMPLEMENTATION_FEE' ? '请输入参与天数' : '请输入费用(元)'"></el-input-number>
                 </template>
               </el-table-column>
-              <el-table-column prop="remark" label="备注">
+              <el-table-column prop="remark" label="备注" width="180">
                 <template #default="scope">
                   <el-input v-model="scope.row.remark" placeholder="请输入备注"></el-input>
                 </template>
@@ -178,7 +199,9 @@ const token = ref(localStorage.getItem('token'))
 const uploadRef = ref(null)
 // 计算请求头
 const tableData = ref([
-  { index: 1, participant: '', participationCount: null, remark: '' }
+  { index: 1, participant: '', participationCount: null, remark: '',  user:'',
+    project:'',
+    dept:'', }
 ]);
 
 const leaveTypes = ['事假', '病假', '调休', '年假', '婚假', '产假', '其他'];
@@ -245,6 +268,9 @@ const expenseTypeChange = () => {
     index: index + 1,
     participant: '',
     participationCount: null,
+    user:'',
+    project:'',
+    dept:'',
     remark: ''
   }));
 }
@@ -255,7 +281,10 @@ const addRow = () => {
     index: newIndex,
     participant: '',
     participationCount: null,
-    remark: ''
+    remark: '',
+    user:'',
+    project:'',
+    dept:'',
   });
 };
 
@@ -314,9 +343,12 @@ const handleSave = () => {
 
 const prepareReimbursementData = () => {
   const tableDataJson = tableData.value.map(item => ({
+    participants: item.users,
+    remark: item.remark,
+    project: item.project,
+    dept: item.dept,
     [form.value.expenseType !== '实施费' ? 'type' : 'participants']: item.participant,
     [form.value.expenseType !== '实施费' ? 'cost' : 'days']: item.participationCount,
-    remark: item.remark,
   }));
   return {
     dateJson: JSON.stringify({
@@ -331,7 +363,7 @@ const prepareReimbursementData = () => {
       reimbursementAmount: form.value.reimbursementAmount,
       project: form.value.project,
       department: form.value.department,
-      attachmentId: form.value.attachmentId.map(item => item.id).join(','),
+      // attachmentId: form.value.attachmentId.map(item => item.id).join(','),
     }) + '&' + JSON.stringify(tableDataJson),
     deployId: sysStore.selected.id,
     type: sysStore.selected.key
@@ -349,7 +381,7 @@ const prepareLeaveData = () => ({
     endTime: form.value.endTime,
     endPeriod: form.value.endPeriod,
     reason: form.value.reason,
-    attachmentId: form.value.attachmentId[0]?.id,
+    // attachmentId: form.value.attachmentId[0]?.id,
   }),
   deployId: sysStore.selected.id,
   type: sysStore.selected.key

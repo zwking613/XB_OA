@@ -1,293 +1,401 @@
-<template>
-    <div id="costStatistics">
-        <div id="main"></div>
+<template id="costStatistics">
+    <div>
+        <div class="search">
+            <FormModule ref="queryRefForm" :fromConfig="filterItem" @submit="query"></FormModule>
+        </div>
+        <div>
+
+            <el-row v-show="costStatisticsStore.searchType === 'project'">
+                <el-col :span="12">
+                    <div id="projectOnePie" style="width: 100%;height: 350px;"></div>
+                </el-col>
+                <el-col :span="12">
+                    <div id="projectTwoPie" style="width: 100%;height: 350px;"></div>
+                </el-col>
+                <el-col :span="12">
+                    <div id="projectOneBar" style="width: 100%;height: 350px;"></div>
+                </el-col>
+                <el-col :span="12">
+                    <div id="projectTwoBar" style="width: 100%;height: 350px;"></div>
+                </el-col>
+            </el-row>
+            <el-row v-show="costStatisticsStore.searchType !== 'project'" class="user-dept-chart">
+                <el-col :span="12">
+                    <div id="userPie" style="width: 100%; height: 100%"></div>
+                </el-col>
+                <el-col :span="12">
+                    <div id="userBar" style="width: 100%; height: 100%"></div>
+                </el-col>
+            </el-row>
+        </div>
     </div>
 </template>
-<script setup name="costStatistics">
-import * as echarts from 'echarts';
-import { useCostStatisticsStore } from '@/stores/costStatistics'
-import { watch } from 'vue';
-const costStatisticsStore = useCostStatisticsStore()
-let myChart;
-
-const initChart = () => {
-    const chartDom = document.getElementById('main');
-    myChart = echarts.init(chartDom, 'dark');
-    const projectData = costStatisticsStore.comProject[costStatisticsStore.projectType] ? (costStatisticsStore.comProject[costStatisticsStore.projectType].paid || {}):{}
-    const projectDataAll = costStatisticsStore.comProject[costStatisticsStore.projectType] ? (costStatisticsStore.comProject[costStatisticsStore.projectType].all || 0):0
-
-    const userData = costStatisticsStore.comUser[costStatisticsStore.userType] || {}
-    const userDataAll = Object.keys(userData).reduce(function (all, key) {
-        return all + userData[key];
-    }, 0)
-   
-    const waterMarkText = '雄博';
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = canvas.height = 100;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.globalAlpha = 0.08;
-    ctx.font = '20px Microsoft Yahei';
-    ctx.translate(50, 50);
-    ctx.rotate(-Math.PI / 4);
-    ctx.fillText(waterMarkText, 0, 0);
-
-    const option = {
-        backgroundColor: {
-            type: 'pattern',
-            image: canvas,
-            repeat: 'repeat'
+<script setup name="costStatistics" lang="jsx">
+import * as echarts from "echarts";
+import { useCostStatisticsStore } from "@/stores/costStatistics";
+import { nextTick, ref, watch } from "vue";
+const costStatisticsStore = useCostStatisticsStore();
+const filterItem = {
+    fields: [
+        {
+            label: "类型",
+            prop: "group",
+            type: "select",
+            value: costStatisticsStore.searchType,
+            options: [
+                { label: "项目", value: "project" },
+                { label: "用户", value: "user" },
+                { label: "部门", value: "dept" },
+            ],
+            style: { width: "170px" },
+            clearable: true,
         },
-        tooltip: {},
-        
-        title: [
-            {
-                text: costStatisticsStore.projectType + '明细',
-                subtext: '总计 ' + projectDataAll,
-                left: '56%',
-                top: '25%',
-                textStyle: {
-                    color: "#000"
-                },
-                textAlign: 'center',
-            },
-            {
-                text: costStatisticsStore.userType + '明细',
-                subtext: '总计 ' + userDataAll,
-                left: '56%',
-                top: '75%',
-                textStyle: {
-                    color: "#000"
-                },
-                textAlign: 'center'
-            },
-            {
-                text: '项目统计',
-                subtext:'总计 ' + Object.keys(costStatisticsStore.pieProject).reduce(function (all, key) {
-                        return all + costStatisticsStore.pieProject[key];
-                    }, 0),
-                left: '75%',
-                textStyle: {
-                    color: "#000"
-                },
-                textAlign: 'center'
-            },
-            {
-                text: '用户统计',
-                subtext:'总计 ' + Object.keys(costStatisticsStore.pieUser).reduce(function (all, key) {
-                        return all + costStatisticsStore.pieUser[key];
-                    }, 0),
-                left: '75%',
-                top: '50%',
-                textStyle: {
-                    color: "#000"
-                },
-                textAlign: 'center' 
-            }
+        // {label: '职员', prop: 'userId',component: <SelectLimit url="/user/page" dataKey={['list', 'list']} labelKey="userName" valueKey="id" style={{width: '170px'}} searchKey="name" placeholder="请选择职员" />},
+        //  {label: '项目', prop: 'project',component: <SelectLimit url="/sys/getProjectList" dataKey="list" labelKey="name" valueKey="name" style={{width: '170px'}} searchKey="name" placeholder="请选择项目" />},
+        // {label:'时间',prop:'time',type:'datePick',clearable: true,dateType:'daterange'},
+    ],
+    rules: {
+        group: [
+            { required: true, message: "请选择类型", trigger: "blur" },
+            { min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur" },
         ],
-        grid: [
-            {
-                top: 50,
-                width: '50%',
-                bottom: '45%',
-                left: 10,
-                containLabel: true
-            },
-            {
-                top: '55%',
-                width: '50%',
-                bottom: 0,
-                left: 10,
-                containLabel: true
-            }
-        ],
-        xAxis: [
-            {
-                type: 'value',
-                max: projectDataAll,
-                splitLine: {
-                    show: false
-                }
-            },
-            {
-                type: 'value',
-                max: userDataAll,
-                gridIndex: 1,
-                splitLine: {
-                    show: false
-                }
-            }
-        ],
-        yAxis: [
-            {
-                type: 'category',
-                data: Object.keys(projectData),
-                axisLabel: {
-                    interval: 0,
-                    rotate: 30
-                },
-                splitLine: {
-                    show: false
-                }
-            },
-            {
-                gridIndex: 1,
-                type: 'category',
-                data: Object.keys(userData),
-                axisLabel: {
-                    interval: 0,
-                    rotate: 30
-                },
-                splitLine: {
-                    show: false
-                }
-            }
-        ],
-        series: [
-            {
-                type: 'bar',
-                stack: 'chart',
-                z: 3,
-                label: {
-                    position: 'right',
-                    show: true
-                },
-                data: Object.keys(projectData).map(function (key) {
-                    return projectData[key];
-                })
-            },
-            {
-                type: 'bar',
-                stack: 'chart',
-                silent: true,
-                itemStyle: {
-                    color: '#eee'
-                },
-                data: Object.keys(projectData).map(function (key) {
-                    return projectDataAll - projectData[key];
-                })
-            },
-            {
-                type: 'bar',
-                stack: 'component',
-                xAxisIndex: 1,
-                yAxisIndex: 1,
-                z: 3,
-                label: {
-                    position: 'right',
-                    show: true
-                },
-                data: Object.keys(userData).map(function (key) {
-                    return userData[key];
-                })
-            },
-            {
-                type: 'bar',
-                stack: 'component',
-                silent: true,
-                xAxisIndex: 1,
-                yAxisIndex: 1,
-                itemStyle: {
-                    color: '#eee'
-                },
-                data: Object.keys(userData).map(function (key) {
-                    return userDataAll - userData[key];
-                })
-            },
-            {
-                type: 'pie',
-                radius: [0, '30%'],
-                center: ['75%', '25%'],
-                data: Object.keys(costStatisticsStore.pieProject).map(function (key) {
-                    return {
-                        name: key,
-                        value: costStatisticsStore.pieProject[key]
-                    };
-                })
-            },
-            {
-                type: 'pie',
-                radius: [0, '30%'],
-                center: ['75%', '75%'],
-                data: Object.keys(costStatisticsStore.pieUser).map(function (key) {
-                    return {
-                        name: key,
-                        value: costStatisticsStore.pieUser[key]
-                    };
-                })
-            }
-        ]
-    };
-
-    option && myChart.setOption(option);
-    myChart.on('click', (params) => {
-        if (params.componentSubType !== 'pie') return;
-        console.log(params.data); // 打印点击的数据项信息
-        if (Object.keys(costStatisticsStore.pieProject).includes(params.data.name)) {
-            costStatisticsStore.projectType = params.data.name
+    },
+    formItemLabelWidth: "auto",
+    inline: true,
+    isCancel: false,
+    isSpan: true,
+    layout: 3,
+    okTitle: "查询",
+};
+let chartUserPie = ref(null);
+let chartUserBar = ref(null);
+let chartProjectOnePie = ref(null);
+let chartProjectTwoPie = ref(null);
+let chartProjectOneBar = ref(null);
+let chartProjectTwoBar = ref(null);
+const initUserPieChart = () => {
+    nextTick(() => {
+        if (!chartUserPie.value) {
+            chartUserPie.value = echarts.init(document.getElementById("userPie"));
         }
-        else{
-            costStatisticsStore.userType = params.data.name
-        }
+        var option;
 
-    });
+        option = {
+            title: {
+                text: (costStatisticsStore.data.title || "") + "统计",
+                subtext:
+                    "总计：" +
+                    costStatisticsStore.data.pieData.reduce(
+                        (sum, item) => sum + item.value,
+                        0
+                    ),
+                left: "center",
+            },
+            legend: {
+                orient: "vertical",
+                left: "left",
+            },
+            tooltip: {
+                trigger: "item",
+            },
+            series: [
+                {
+                    type: "pie",
+                    radius: "50%",
+                    data: costStatisticsStore.data.pieData,
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: "rgba(0, 0, 0, 0.5)",
+                        },
+                    },
+                },
+            ],
+        };
+
+        option && chartUserPie.value.setOption(option);
+        chartUserPie.value.on("click", (params) => {
+            costStatisticsStore.data.select = params.data.name;
+        });
+    })
+};
+const initUserBarChart = () => {
+    nextTick(() => {
+        if (!chartUserBar.value) {
+            chartUserBar.value = echarts.init(document.getElementById("userBar"));
+        }
+        const data = costStatisticsStore.data.comData[costStatisticsStore.data.select] || {};
+        const xAxis = Object.keys(data);
+        const yAxis = Object.values(data);
+        var option = {
+            title: {
+                text: (costStatisticsStore.data.select || "") + "   明细",
+                subtext: "总计：" + yAxis.reduce((a, b) => a + b, 0),
+                left: "center",
+            },
+            xAxis: {
+                type: "category",
+                data: xAxis,
+            },
+            tooltip: {
+                trigger: "item",
+            },
+            yAxis: {
+                type: "value",
+            },
+            series: [
+                {
+                    data: yAxis,
+                    type: "bar",
+                },
+            ],
+        };
+
+        option && chartUserBar.value.setOption(option);
+    })
+};
+
+const initProjectOnePie = () => {
+
+    nextTick(() => {
+        if (!chartProjectOnePie.value) {
+            chartProjectOnePie.value = echarts.init(document.getElementById("projectOnePie"));
+        }
+        var option = {
+            title: {
+                text: "统计",
+                subtext:
+                    "总计：" +
+                    costStatisticsStore.projectData.onePieData.reduce(
+                        (sum, item) => sum + item.value,
+                        0
+                    ),
+                left: "center",
+            },
+            legend: {
+                orient: "vertical",
+                left: "left",
+            },
+            tooltip: {
+                trigger: "item",
+            },
+            series: [
+                {
+                    type: "pie",
+                    radius: "50%",
+                    data: costStatisticsStore.projectData.onePieData,
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: "rgba(0, 0, 0, 0.5)",
+                        },
+                    },
+                },
+            ],
+        };
+
+        chartProjectOnePie.value.setOption(option);
+        chartProjectOnePie.value.on("click", (params) => {
+            costStatisticsStore.projectData.selectOne = params.data.name;
+        });
+    })
 }
+const initProjectTwoPie = () => {
+    nextTick(() => {
+        if (!chartProjectTwoPie.value) {
+            chartProjectTwoPie.value = echarts.init(document.getElementById("projectTwoPie"));
+        }
+        const comProjectData = costStatisticsStore.projectData.comProjectData[costStatisticsStore.projectData.selectOne];
+        const data = comProjectData.map((item) => {
+            return {
+                name: item.projectName,
+                value: item.totalCost || 0
+            };
+        })
+        var option = {
+            title: {
+                text: "统计",
+                subtext:
+                    "总计：" +
+                    data.reduce(
+                        (sum, item) => sum + item.value,
+                        0
+                    ),
+                left: "center",
+            },
+            legend: {
+                orient: "vertical",
+                left: "left",
+            },
+            tooltip: {
+                trigger: "item",
+            },
+            series: [
+                {
+                    type: "pie",
+                    radius: "50%",
+                    data: data,
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: "rgba(0, 0, 0, 0.5)",
+                        },
+                    },
+                },
+            ],
+        };
+
+        chartProjectTwoPie.value.setOption(option);
+        chartProjectTwoPie.value.on("click", (params) => {
+            costStatisticsStore.projectData.selectTwo = params.data.name;
+        });
+    })
+}
+
+const initProjectOneBar = () => {
+    nextTick(() => {
+        if (!chartProjectOneBar.value) {
+            chartProjectOneBar.value = echarts.init(document.getElementById("projectOneBar"));
+        }
+        const comProjectData = costStatisticsStore.projectData.comProjectData[costStatisticsStore.projectData.selectOne];
+        const data = comProjectData.find(item => item.projectName === costStatisticsStore.projectData.selectTwo)?.statistics
+            ;
+        const xAxis = Object.keys(data);
+        const yAxis = Object.values(data);
+        var option = {
+            title: {
+                text: "明细",
+                subtext: "总计：" + yAxis.reduce((a, b) => a + b, 0),
+                left: "center",
+            },
+            xAxis: {
+                type: "category",
+                data: xAxis,
+            },
+            tooltip: {
+                trigger: "item",
+            },
+            yAxis: {
+                type: "value",
+            },
+            series: [
+                {
+                    data: yAxis,
+                    type: "bar",
+                },
+            ],
+        };
+
+        option && chartProjectOneBar.value.setOption(option);
+    })
+};
+const initProjectTwoBar = () => {
+    nextTick(() => {
+        if (!chartProjectTwoBar.value) {
+            chartProjectTwoBar.value = echarts.init(document.getElementById("projectTwoBar"));
+        }
+        const comProjectData = costStatisticsStore.projectData.comProjectData[costStatisticsStore.projectData.selectOne];
+        const data = comProjectData.find(item => item.projectName === costStatisticsStore.projectData.selectTwo)?.detailsByUser
+        console.log(data)
+        const dataset = [];
+        for (const [product, values] of Object.entries(data)) {
+            const entry = { product };
+            for (const [key, value] of Object.entries(values)) {
+                entry[key] = value;
+            }
+            dataset.push(entry);
+        }
+        const dimensions = []
+        Object.values(data).forEach(item=>{
+            dimensions.push(...Object.keys(item))
+        })
+        var option = {
+            legend: {},
+            tooltip: {},
+            dataset: {
+                dimensions: ['product', ...dimensions],
+                source: dataset,
+            },
+            xAxis: { type: 'category' },
+            yAxis: {},
+            series: dimensions.map(function (item) {
+                return { type: 'bar' }
+            })
+        };
+
+        option && chartProjectTwoBar.value.setOption(option);
+    })
+};
+
+watch(
+    () => costStatisticsStore,
+    () => {
+        if (costStatisticsStore.searchType === 'project') {
+            initProjectOnePie();
+            initProjectTwoPie()
+            initProjectOneBar();
+            initProjectTwoBar();
+        }
+        else {
+            initUserPieChart();
+            initUserBarChart();
+        }
+
+    },
+    { deep: true }
+);
+
+const query = (params) => {
+    const { group, userId, project, time } = params;
+    let startDate = null;
+    let endDate = null;
+    try {
+        if (time) {
+            startDate = new Date(time[0]);
+            endDate = new Date(time[1]);
+        }
+        costStatisticsStore.getProjectData({
+            group,
+            userId,
+            project,
+            startDate,
+            endDate,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 onMounted(() => {
-    costStatisticsStore.getProjectStatistics()
-    costStatisticsStore.getUserStatistics()
-    initChart()
+    query({ group: 'project' })
 });
-watch([
-    () => costStatisticsStore.pieProject, 
-    () => costStatisticsStore.projectType,
-    () => costStatisticsStore.pieUser,
-    () => costStatisticsStore.userType
-    ], () => {
-    initChart()
-})
 </script>
 <style scoped>
-#costStatistics {
+.search {
     width: 100%;
-    height: calc(100vh - 200px);
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    height: 50px;
 }
-#costStatistics {
+
+.user-dept-chart {
     width: 100%;
-    height: calc(100vh - 200px);
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-}
-#costStatistics::-webkit-scrollbar {
-    width: 8px;
+    height: calc(100vh - 300px);
 }
 
-#costStatistics {
-    overflow-y: auto;
+#userBar {
+    width: 100%;
+    height: 400px;
 }
 
-#costStatistics::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-    border-radius: 4px;
+#deptBar {
+    width: 100%;
+    height: 400px;
 }
 
-#costStatistics::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 4px;
-}
-
-#costStatistics::-webkit-scrollbar-thumb:hover {
-    background-color: #555;
-}
 #main {
     width: 100%;
-    height: 100%;
+    height: 400px;
 }
 </style>
