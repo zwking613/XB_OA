@@ -49,10 +49,7 @@ const filterItem = {
             ],
             style: { width: "170px" },
             clearable: true,
-        },
-        // {label: '职员', prop: 'userId',component: <SelectLimit url="/user/page" dataKey={['list', 'list']} labelKey="userName" valueKey="id" style={{width: '170px'}} searchKey="name" placeholder="请选择职员" />},
-        //  {label: '项目', prop: 'project',component: <SelectLimit url="/sys/getProjectList" dataKey="list" labelKey="name" valueKey="name" style={{width: '170px'}} searchKey="name" placeholder="请选择项目" />},
-        // {label:'时间',prop:'time',type:'datePick',clearable: true,dateType:'daterange'},
+        }
     ],
     rules: {
         group: [
@@ -131,7 +128,7 @@ const initUserBarChart = () => {
         var option = {
             title: {
                 text: (costStatisticsStore.data.select || "") + "   明细",
-                subtext: "总计：" + yAxis.reduce((a, b) => a + b, 0),
+                // subtext: "总计：" + yAxis.reduce((a, b) => a + b, 0),
                 left: "center",
             },
             xAxis: {
@@ -165,12 +162,12 @@ const initProjectOnePie = () => {
         var option = {
             title: {
                 text: "统计",
-                subtext:
-                    "总计：" +
-                    costStatisticsStore.projectData.onePieData.reduce(
-                        (sum, item) => sum + item.value,
-                        0
-                    ),
+                // subtext:
+                //     "总计：" +
+                //     costStatisticsStore.projectData.onePieData.reduce(
+                //         (sum, item) => sum + item.value,
+                //         0
+                //     ),
                 left: "center",
             },
             legend: {
@@ -217,12 +214,12 @@ const initProjectTwoPie = () => {
         var option = {
             title: {
                 text: "统计",
-                subtext:
-                    "总计：" +
-                    data.reduce(
-                        (sum, item) => sum + item.value,
-                        0
-                    ),
+                // subtext:
+                //     "总计：" +
+                //     data.reduce(
+                //         (sum, item) => sum + item.value,
+                //         0
+                //     ),
                 left: "center",
             },
             legend: {
@@ -268,7 +265,7 @@ const initProjectOneBar = () => {
         var option = {
             title: {
                 text: "明细",
-                subtext: "总计：" + yAxis.reduce((a, b) => a + b, 0),
+                // subtext: "总计：" + yAxis.reduce((a, b) => a + b, 0),
                 left: "center",
             },
             xAxis: {
@@ -299,7 +296,6 @@ const initProjectTwoBar = () => {
         }
         const comProjectData = costStatisticsStore.projectData.comProjectData[costStatisticsStore.projectData.selectOne];
         const data = comProjectData.find(item => item.projectName === costStatisticsStore.projectData.selectTwo)?.detailsByUser
-        console.log(data)
         const dataset = [];
         for (const [product, values] of Object.entries(data)) {
             const entry = { product };
@@ -312,6 +308,7 @@ const initProjectTwoBar = () => {
         Object.values(data).forEach(item=>{
             dimensions.push(...Object.keys(item))
         })
+      console.log(dimensions)
         var option = {
             legend: {},
             tooltip: {},
@@ -333,7 +330,7 @@ const initProjectTwoBar = () => {
 watch(
     () => costStatisticsStore,
     () => {
-        if (costStatisticsStore.searchType === 'project') {
+      if (costStatisticsStore.searchType === 'project') {
             initProjectOnePie();
             initProjectTwoPie()
             initProjectOneBar();
@@ -370,6 +367,7 @@ const query = (params) => {
 };
 
 onMounted(() => {
+
     query({ group: 'project' })
 });
 </script>
