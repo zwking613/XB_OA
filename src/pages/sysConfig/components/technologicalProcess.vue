@@ -63,8 +63,10 @@
               <el-input type="number" v-model="form.reimbursementAmount" placeholder="请输入报销金额"></el-input>
             </el-form-item>
             <el-form-item label="所属项目" v-if="form.expenseType !=='DAILY_EXPENSES'" required prop="project">
-              <SelectLimit v-model="form.project" url="/sys/getProjectList" dataKey="list" labelKey="name"
-                valueKey="name" searchKey="name" placeholder="请选择所属项目" tag-type="warning" />
+<!--              <SelectLimit v-model="form.project" url="/sys/getProjectList" dataKey="list" labelKey="name"-->
+<!--                valueKey="name" searchKey="name" placeholder="请选择所属项目" tag-type="warning" />-->
+              <SelectTree v-model="form.project" url="/sys/getProjectList" dataKey="list" labelKey="name" valueKey="name"
+                          placeholder="请选择所属项目" />
             </el-form-item>
             <el-form-item label="地点" required prop="place">
               <el-input type="text" v-model="form.place" placeholder="请输入地点"></el-input>
@@ -124,16 +126,18 @@
               <el-table-column prop="index" label="序号" width="80"></el-table-column>
               <el-table-column prop="users" label="参与用户" v-if="form.expenseType !== 'IMPLEMENTATION_FEE'" width="180">
                  <template #default="scope">
-                  <SelectLimit v-model="scope.row.users"
+                  <SelectLimit v-model="scope.row.user"
                     url="/user/page" :dataKey="['list', 'list']"  labelKey="userName" valueKey="id"
                     searchKey="name" placeholder="请选择参与用户" tag-type="warning" />
                 </template>
               </el-table-column>
               <el-table-column prop="project" label="所属项目" v-if="form.expenseType !== 'IMPLEMENTATION_FEE'" width="180">
                  <template #default="scope">
-                  <SelectLimit v-model="scope.row.project"
-                  url="/sys/getProjectList" dataKey="list" labelKey="name"
-                valueKey="name" searchKey="name" placeholder="请选择所属项目" tag-type="warning" />
+<!--                  <SelectLimit v-model="scope.row.project"-->
+<!--                  url="/sys/getProjectList" dataKey="list" labelKey="name"-->
+<!--                valueKey="name" searchKey="name" placeholder="请选择所属项目" tag-type="warning" />-->
+                   <SelectTree v-model="scope.row.project" url="/sys/getProjectList" dataKey="list" labelKey="name" valueKey="name"
+                               placeholder="请选择所属项目" />
                 </template>
               </el-table-column>
               <el-table-column prop="dept" v-if="form.expenseType !== 'IMPLEMENTATION_FEE'" label="所属部门" width="180">
@@ -342,13 +346,14 @@ const handleSave = () => {
 };
 
 const prepareReimbursementData = () => {
+
   const tableDataJson = tableData.value.map(item => ({
-    participants: item.users,
+    participants: item.user,
     remark: item.remark,
     project: item.project,
     dept: item.dept,
-    [form.value.expenseType !== '实施费' ? 'type' : 'participants']: item.participant,
-    [form.value.expenseType !== '实施费' ? 'cost' : 'days']: item.participationCount,
+    [form.value.expenseType !== 'IMPLEMENTATION_FEE' ? 'type' : 'participants']: item.participant,
+    [form.value.expenseType !== 'IMPLEMENTATION_FEE' ? 'cost' : 'days']: item.participationCount,
   }));
   return {
     dateJson: JSON.stringify({
