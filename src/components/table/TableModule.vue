@@ -15,7 +15,7 @@
     <!-- 表格 -->
     <el-table border :row-key="tableData.rowKey ? tableData.rowKey : 'id'" empty-text="暂无数据" :data="data.list"
       :style="tableData.tableStyle" :row-class-name="tableRowClassName" :height="tableData.fixedHeaderHeight"
-      :table-layout="tableData.tableLayout" @selection-change="selectChange">
+      :table-layout="tableData.tableLayout" @selection-change="selectChange" default-expand-all>
       <!-- 多选框 -->
       <el-table-column v-if="tableData.selection" type="selection" width="55" :align="tableData.align" />
 
@@ -153,7 +153,6 @@ export default {
       cancelTitle: "取消",
       size: "default",
       labelPosition: "right",
-      isFormBtn: true,
       layout: 1,
       labelWidth: "auto",
       formItemLabelWidth: "120px",
@@ -169,7 +168,6 @@ export default {
       cancelTitle: "取消",
       size: "default",
       labelPosition: "right",
-      isFormBtn: true,
       layout: 1,
       labelWidth: "auto",
       formItemLabelWidth: "120px",
@@ -379,7 +377,6 @@ export default {
         });
       }
     };
-
     onBeforeMount(() => {
       initTable();
       initTableOperation();

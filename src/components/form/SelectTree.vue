@@ -38,7 +38,6 @@ const fetchTreeData = async () => {
     const response = await post(props.url);
     let data = Array.isArray(props.dataKey) ? props.dataKey.reduce((acc, key) => acc[key], response) : response[props.dataKey];
     treeData.value = props.customData ? props.customData(data) || [] : data || [];
-    console.log(treeData.value)
   } catch (error) {
     console.error('Error fetching tree data:', error);
   }
