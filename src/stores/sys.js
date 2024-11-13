@@ -8,7 +8,7 @@ export const useSysStore = defineStore("sys", {
        selected:{}, // 当前选中的流程定义
        submittedList:[], // 已提交列表
 
-       searchType:'all', // 搜索类型
+       searchType:1, // 搜索类型
        listType:'reimbursement_process', 
        toBeProcessedList:{
         list:[], 

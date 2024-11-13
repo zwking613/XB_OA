@@ -111,7 +111,7 @@
           left: contextMenu.left + 'px',
         }" class="absolute z-50 bg-white shadow-xl rounded-md list-none w-[100px]">
           <li v-for="item in contextMenuList" :key="item.action" @click="handleContextMenuAction(item.action)"
-            class="p-2 text-[12px] text-center cursor-pointer hover:bg-gray-100">
+            class="p-2 text-[12px] text-left cursor-pointer hover:bg-gray-100">
             <el-dropdown v-if="item.action === 'move'" @command="handleMoveFile" trigger="hover" placement="right">
               <span
                 class="el-dropdown-link p-2 text-[12px] text-center cursor-pointer hover:bg-gray-100 flex items-center justify-between">
@@ -213,7 +213,7 @@ const contextMenuList = ref(allMenu);
 // 目录列表
 const directory = [
   { label: "所有文件", icon: "Folder" },
-  { label: "报销附件", icon: "Document" },
+  // { label: "报销附件", icon: "Document" },
   { label: "共享文件夹", icon: "Share" },
   { label: "回收站", icon: "DeleteFilled" },
 ];
@@ -397,10 +397,23 @@ const handleSelectAll = (e) => {
 
 // 处理删除文件
 const handleDelete = () => {
-  fileStore.removeFile(selectedFiles.value.join(","), () => {
+  const type = directory[defaultActive.value - 1].label;
+/*
+*
+* 当在回收站点击删除时，就直接删除，
+*
+* */
+  if(type === '回收站'){
+    fileStore.removeFile(selectedFiles.value.join(","), () => {
+      selectedFiles.value = [];
+      selectAll.value = false;
+    });
+  }
+  else {
+    fileStore.moveFileToRecycleBin(selectedFiles.value.join(","), type);
     selectedFiles.value = [];
     selectAll.value = false;
-  });
+  }
 };
 
 // 刷新文件列表

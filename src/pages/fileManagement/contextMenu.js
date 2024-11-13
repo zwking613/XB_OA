@@ -65,7 +65,6 @@ export const fileTypeIcons = {
     'xls': xls,
     'ppt': ppt,
     'pptx': ppt,
-    'pdf': pdf,
     'xlsx': excel,
     'jpeg': jpeg,
     'jpg': jpg,

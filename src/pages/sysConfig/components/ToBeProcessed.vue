@@ -2,7 +2,7 @@
   <div>
     <div style="margin-bottom: 10px;display: flex;">
       <el-select style="width: 100px;" v-model="sysStore.searchType" @change="searchTypeChange" placeholder="请选择">
-        <el-option label="全部" value="all" />
+<!--        <el-option label="全部" value="all" />-->
         <el-option label="我审核的" :value="0" />
         <el-option label="我发起的" :value="1" />
       </el-select>

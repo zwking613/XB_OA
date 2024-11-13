@@ -11,7 +11,7 @@ export const useCostStatisticsStore = defineStore('costStatistics', {
         comUser:{},
 
 
-        searchType:'',
+        searchType:'project',
         data:{
             pieData:[],
             comData:[],

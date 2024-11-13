@@ -152,7 +152,6 @@ const initUserBarChart = () => {
         option && chartUserBar.value.setOption(option);
     })
 };
-
 const initProjectOnePie = () => {
 
     nextTick(() => {
@@ -251,7 +250,6 @@ const initProjectTwoPie = () => {
         });
     })
 }
-
 const initProjectOneBar = () => {
     nextTick(() => {
         if (!chartProjectOneBar.value) {
