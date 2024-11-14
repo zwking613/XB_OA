@@ -12,6 +12,7 @@ import DialogModule from '@/components/dialog/DialogModule.vue';
 import FormModule from '@/components/form/FormModule.vue';
 import SelectLimit from '@/components/form/SelectLimit.vue';
 import SelectTree from '@/components/form/SelectTree.vue';
+import  UploadFile from '@/components/form/Upload.vue'
 import './style.css'
 import 'element-plus/dist/index.css';
 
@@ -25,6 +26,7 @@ app.component('FormModule', FormModule)
 // 全局注册SelectLimit组件
 app.component('SelectLimit', SelectLimit)
 app.component('SelectTree', SelectTree)
+app.component('UploadFile', UploadFile)
 
 // 全局注册element-plus图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

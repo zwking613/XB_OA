@@ -3,7 +3,6 @@
         <TableModule :insertConfig="insertConfig" :editConfig="editConfig" :column="columns" :data="ppsStore.pps"
             @refresh="refresh" @del="deletePps" @insert="saveOrUpdate" :tableConfig="tableConfig" :actions="actions"
             @edit="saveOrUpdate" />
-
         <DialogModule :dialogConfig="dialogParameters" @onCancel="onCancel">
             <el-descriptions :column="3" border>
                 <el-descriptions-item label="项目名称" label-align="center" align="center" label-class-name="my-label"
@@ -28,14 +27,14 @@
 
                 <TableModule :insertConfig="insertConfigItem" :column="columnsItem" :data="{
                 list: ppsStore.ppsItemList
-            }" @del="deleteItem" @insert="insertItem" :tableConfig="{ isPaging: false, fixedHeaderHeight:'200px'}" />
+            }" @del="deleteItem" @insert="insertItem" :actions="detailsActions" :tableConfig="{ isPaging: false, fixedHeaderHeight:'200px'}" />
         </DialogModule>
     </div>
 </template>
 
 <script setup name="Pps" lang="jsx">
-import { usePpsStore } from '@/stores/pps'
-
+import { usePpsStore } from '@/stores/pps';
+import { upload, download} from "@/services/upload.js";
 const ppsStore = usePpsStore()
 const dialogParameters = ref({
     visible: false,
@@ -189,7 +188,26 @@ const insertConfigItem = {
         label: "进度描述",
         prop: "info",
         type: "textarea"
-    }]
+    }
+    ,{
+      label: "上传方案",
+      prop: "scheme",
+      type: "upload",
+      action:upload,
+      data:{
+        model:'REIMBURSEMENT'
+      }
+    },
+      {
+       label: "上传报告",
+       prop: "report",
+       type: "upload",
+       action:upload,
+       data:{
+         model:'REIMBURSEMENT'
+       }
+     }
+    ]
 }
 
 const onCancel = () => {
@@ -270,6 +288,26 @@ const actions = ref([
         icon: 'Monitor',
         color: "#E67888",
         handler: handleDetail
+    }
+])
+const detailsActions = ref([
+    {
+        title: '查看方案',
+        icon: 'View',
+        color: "#E67888",
+        handler: ({schemeFile})=>{
+            if(!schemeFile)return ElMessage.error('未上传方案！');
+           window.open(`${download}?fileId=${schemeFile.fileId}`, "_self");
+        }
+    },
+     {
+        title: '查看报告',
+        icon: 'View',
+        color: "#A67888",
+         handler: ({reportFile})=>{
+        if(!reportFile)return ElMessage.error('未上传方案！');
+           window.open(`${download}?fileId=${reportFile.fileId}`, "_self");
+        }
     }
 ])
 

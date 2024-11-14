@@ -152,6 +152,8 @@ const initUserBarChart = () => {
         option && chartUserBar.value.setOption(option);
     })
 };
+
+
 const initProjectOnePie = () => {
 
     nextTick(() => {
@@ -160,18 +162,18 @@ const initProjectOnePie = () => {
         }
         var option = {
             title: {
-                text: "统计",
+                text: "项目对比统计",
                 // subtext:
                 //     "总计：" +
                 //     costStatisticsStore.projectData.onePieData.reduce(
                 //         (sum, item) => sum + item.value,
                 //         0
                 //     ),
-                left: "center",
+                // left: "center",
             },
             legend: {
                 orient: "vertical",
-                left: "left",
+                left: "right",
             },
             tooltip: {
                 trigger: "item",
@@ -212,18 +214,18 @@ const initProjectTwoPie = () => {
         })
         var option = {
             title: {
-                text: "统计",
+                text: "项目细分对比统计",
                 // subtext:
                 //     "总计：" +
                 //     data.reduce(
                 //         (sum, item) => sum + item.value,
                 //         0
                 //     ),
-                left: "center",
+                // left: "center",
             },
             legend: {
                 orient: "vertical",
-                left: "left",
+                left: "right",
             },
             tooltip: {
                 trigger: "item",
@@ -252,19 +254,19 @@ const initProjectTwoPie = () => {
 }
 const initProjectOneBar = () => {
     nextTick(() => {
-        if (!chartProjectOneBar.value) {
+        // if (!chartProjectOneBar.value) {
             chartProjectOneBar.value = echarts.init(document.getElementById("projectOneBar"));
-        }
+        // }
         const comProjectData = costStatisticsStore.projectData.comProjectData[costStatisticsStore.projectData.selectOne];
         const data = comProjectData.find(item => item.projectName === costStatisticsStore.projectData.selectTwo)?.statistics
             ;
-        const xAxis = Object.keys(data);
-        const yAxis = Object.values(data);
+        const xAxis =data? Object.keys(data) :[];
+        const yAxis =data ? Object.values(data):[];
         var option = {
             title: {
-                text: "明细",
+                text: "类型-费用柱状图",
                 // subtext: "总计：" + yAxis.reduce((a, b) => a + b, 0),
-                left: "center",
+                // left: "center",
             },
             xAxis: {
                 type: "category",
@@ -295,24 +297,46 @@ const initProjectTwoBar = () => {
         const comProjectData = costStatisticsStore.projectData.comProjectData[costStatisticsStore.projectData.selectOne];
         const data = comProjectData.find(item => item.projectName === costStatisticsStore.projectData.selectTwo)?.detailsByUser
         const dataset = [];
-        for (const [product, values] of Object.entries(data)) {
-            const entry = { product };
-            for (const [key, value] of Object.entries(values)) {
-                entry[key] = value;
-            }
-            dataset.push(entry);
-        }
-        const dimensions = []
-        Object.values(data).forEach(item=>{
-            dimensions.push(...Object.keys(item))
-        })
-      console.log(dimensions)
+      const dimensions = []
+        console.log(data)
+       if(data){
+         Object.values(data).forEach(item=>{
+           dimensions.push(...Object.keys(item))
+         })
+         for (const [product, values] of Object.entries(data)) {
+           console.log(product)
+           let entry = [ ];
+           for (const [key, value] of Object.entries(values)) {
+
+             entry[dimensions.indexOf(key)] = (value)
+           }
+           entry.unshift( product)
+           dataset.push(entry);
+         }
+
+       }
+      // console.log(data)
+      // console.log(dimensions)
+      console.log( [
+        ['product', ...dimensions],
+        ...dataset
+      ])
         var option = {
-            legend: {},
+          title: {
+            text: "员工-类型-费用柱状图",
+            // subtext: "总计：" + yAxis.reduce((a, b) => a + b, 0),
+            // left: "",
+          },
+          legend: {
+            orient: "vertical",
+            left: "right",
+          },
             tooltip: {},
             dataset: {
-                dimensions: ['product', ...dimensions],
-                source: dataset,
+              source: [
+                ['product', ...dimensions],
+                  ...dataset
+              ]
             },
             xAxis: { type: 'category' },
             yAxis: {},
@@ -329,6 +353,14 @@ watch(
     () => costStatisticsStore,
     () => {
       if (costStatisticsStore.searchType === 'project') {
+            if(chartProjectOnePie.value)chartProjectOnePie.value.dispose();
+            if(chartProjectTwoPie.value)chartProjectTwoPie.value.dispose();
+            if(chartProjectOneBar.value)chartProjectOneBar.value.dispose();
+            if(chartProjectTwoBar.value)chartProjectTwoBar.value.dispose();
+            chartProjectOnePie.value = null
+            chartProjectTwoPie.value = null
+            chartProjectOneBar.value = null
+            chartProjectTwoBar.value = null
             initProjectOnePie();
             initProjectTwoPie()
             initProjectOneBar();

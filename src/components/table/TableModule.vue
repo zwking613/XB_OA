@@ -69,8 +69,10 @@
             </el-popconfirm>
             <el-tooltip v-else class="box-item" effect="dark" :content="item.title" placement="bottom"
               :key="item.title">
-              <el-button v-bind="{ ...item }" :style="{ color: '#FFF', background: item.color }" :icon="item.icon" color="#FFFF"
+            <span>
+                <el-button v-bind="{ ...item }" :style="{ color: '#FFF', background: item.color }" :icon="item.icon" color="#FFFF"
                 @click="item.handler(scope.row)" circle />
+            </span>
             </el-tooltip>
           </template>
         </template>

@@ -58,6 +58,12 @@
           <el-color-picker v-if="item.type==='colorPicker'&& !item.check" v-model="formParameter.form[item.prop]"
             @change="item.onChange" :disabled="item.disabled" :show-alpha="item.showAlpha"
             :predefine="item.predefineColors" />
+
+
+          <UploadFile  :data="item" v-if="item.type==='upload'&& !item.check" v-model="formParameter.form[item.prop]" :formData ="formParameter" :filed="item.prop" :success="(data)=>{
+            formParameter.form[item.prop] = data
+          }"/>
+
           <!-- date-->
           <el-date-picker v-if="item.type==='datePick'&& !item.check" v-model="formParameter.form[item.prop]"
             @change="item.onChange" :readonly="item.readonly" :disabled="item.disabled" :type="item.dateType"
@@ -146,6 +152,10 @@ export default {
         formParameter.layout = newLayout;
       }
     );
+    // 计算请求头
+    const getToken = computed(() => {
+      return localStorage.getItem("token") || "";
+    });
     const initForm = () => {
       const formKeys = Object.keys(formParameter);
       for (const key in props.fromConfig) {
@@ -182,7 +192,8 @@ export default {
       submitForm,
       resetForm,
       onCancel,
-      initForm
+      initForm,
+      getToken
     };
   }
 };
